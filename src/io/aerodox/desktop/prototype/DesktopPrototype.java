@@ -6,10 +6,12 @@ package io.aerodox.desktop.prototype;
 import io.aerodox.desktop.math.Vector3D;
 
 import java.awt.AWTException;
+import java.awt.Cursor;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +59,7 @@ public class DesktopPrototype {
 		
 		this.parser = new JsonParser();
 		this.gson = new Gson();
+		
 	}
 	
 	public void start() {
@@ -83,7 +86,7 @@ public class DesktopPrototype {
 			JsonObject object = readJson(accept.getInputStream());
 			Vector3D vec = toLinearAcc(object.get("acc"));
 			moveMouse(vec);
-		} catch (IOException e) {
+		} catch (IOException e) {this.robot.mousePress(InputEvent.BUTTON2_DOWN_MASK);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -126,7 +129,7 @@ public class DesktopPrototype {
 			NetworkInterface netInterface;
 			for (; netInterfaces.hasMoreElements();) {
 				netInterface = netInterfaces.nextElement();
-				if (!netInterface.isLoopback() && netInterface.isUp()) {
+				if (!netInterface.isLoopback() && !netInterface.isVirtual() && netInterface.isUp()) {
 					Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
 					InetAddress address;
 					for (; addresses.hasMoreElements();) {
