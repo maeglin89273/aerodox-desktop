@@ -6,6 +6,9 @@ package io.aerodox.desktop.prototype;
 import io.aerodox.desktop.math.Vector3D;
 
 import java.awt.AWTException;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,23 +36,27 @@ import com.google.gson.stream.JsonReader;
  */
 public class DesktopPrototype {
 	private static final int PORT = 1810;
-	private static final float SCALE_COEF = 2.5f;
+	private static final double SCALE_COEF = 3;
 	
 	private Robot robot;
 	private ServerSocket socket;
 	
+	private JsonParser parser;
+	private Gson gson;
 	
 	
 	public DesktopPrototype() {
 		try {
-			robot = new Robot();
-			socket = new ServerSocket(PORT);
+			this.robot = new Robot();
+			this.socket = new ServerSocket(PORT);
 		} catch (AWTException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
+		this.parser = new JsonParser();
+		this.gson = new Gson();
 	}
 	
 	public void start() {
@@ -83,24 +90,25 @@ public class DesktopPrototype {
 	}
 	
 	private void moveMouse(Vector3D vec) {
-		this.robot.mouseMove(scale(vec.getX()), scale(vec.getY()));
+		
+		Point point = MouseInfo.getPointerInfo().getLocation();
+		this.robot.mouseMove(scale(vec.getX()) + (int)point.getX(), scale(vec.getZ()) + (int)point.getY());
 	}
 
-	private int scale(float value) {
-		return Math.round(value * SCALE_COEF);
+	private int scale(double value) {
+		return (int)Math.round(value * SCALE_COEF);
 	}
 
 	private JsonObject readJson(InputStream stream) throws IOException {
 		JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(stream)));
 		
-		JsonParser parser = new JsonParser();
-		JsonObject object = parser.parse(reader).getAsJsonObject();
+		JsonObject object = this.parser.parse(reader).getAsJsonObject();
 		reader.close();
 		return object;
 	}
 	
 	private Vector3D toLinearAcc(JsonElement element) {
-		return new Gson().fromJson(element, Vector3D.class);
+		return this.gson.fromJson(element, Vector3D.class);
 	}
 	
 	private void showIPs() {
