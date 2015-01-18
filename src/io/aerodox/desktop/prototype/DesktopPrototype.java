@@ -12,6 +12,7 @@ import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,17 +77,19 @@ public class DesktopPrototype {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				
+				System.out.println("connecting error");
 			}
 		
 	}
 
 	private void handleMovement(Socket accept) {
 		try {
-			JsonObject object = readJson(accept.getInputStream());
-			Vector3D vec = toLinearAcc(object.get("acc"));
-			moveMouse(vec);
-		} catch (IOException e) {this.robot.mousePress(InputEvent.BUTTON2_DOWN_MASK);
+			readJson(accept.getInputStream());
+			
+			
+//			robot.mousePress(InputEvent.getMaskForButton(4));
+//			robot.mouseRelease(InputEvent.getMaskForButton(4));
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -102,12 +105,20 @@ public class DesktopPrototype {
 		return (int)Math.round(value * SCALE_COEF);
 	}
 
-	private JsonObject readJson(InputStream stream) throws IOException {
+	private void readJson(InputStream stream) throws IOException {
 		JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(stream)));
-		
-		JsonObject object = this.parser.parse(reader).getAsJsonObject();
+		try {
+			reader.beginArray();
+			
+			for(int i = 0;reader.hasNext(); i++) {
+				System.out.println(this.parser.parse(reader).getAsJsonObject().get("action").getAsString());
+			}
+			
+			reader.endArray();
+		} catch(IllegalStateException e) {
+			e.printStackTrace();
+		} 
 		reader.close();
-		return object;
 	}
 	
 	private Vector3D toLinearAcc(JsonElement element) {

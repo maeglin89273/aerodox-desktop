@@ -6,6 +6,7 @@ package io.aerodox.desktop;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
 
+import io.aerodox.desktop.connection.LANConnection;
 import io.aerodox.desktop.prototype.DesktopPrototype;
 
 /**
@@ -14,7 +15,7 @@ import io.aerodox.desktop.prototype.DesktopPrototype;
  */
 public class DesktopLunacher {
 	public static void main(String[] args) {
-		new DesktopPrototype().start();
+		new LANConnection().start();
 	}
 	
 	
