@@ -13,28 +13,28 @@ import io.aerodox.desktop.service.ConfigurationService;
  *
  */
 public class TouchTranslator implements SubTranslator {
-
+	private static final double SCALE = 0.2;
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translate(io.aerodox.desktop.translation.Arguments)
 	 */
 	@Override
 	public Action translate(Arguments args) {
-		Vector2D ptg = args.getAsVector2D("posPtg");
+		Vector2D mov = args.getAsVector2D("touchMov");
 		ConfigurationService config = ConfigurationService.getInstance();
-		return new TouchAction(ptg.set(ptg.getX() * config.getScreenWidth() , ptg.getY() * config.getScreenHeight()));
+		return new TouchAction(mov.set(mov.getX() * SCALE , mov.getY() * SCALE));
 	}
 	
 	private class TouchAction implements Action {
 		
-		Vector2D pos;
+		Vector2D mov;
 		
-		private TouchAction(Vector2D acc) {
-			this.pos = acc;
+		private TouchAction(Vector2D mov) {
+			this.mov = mov;
 		}
 		
 		@Override
 		public Object perform(Performer performer, Environment env) {
-			performer.mouseMove(pos);
+			performer.mouseMove(env.getMousePosition().add(mov));
 			return null;
 		}
 		
