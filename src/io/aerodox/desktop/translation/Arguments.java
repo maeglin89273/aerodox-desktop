@@ -1,6 +1,7 @@
 package io.aerodox.desktop.translation;
 
 import io.aerodox.desktop.imitation.MouseButtonState;
+import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
 
 import com.google.gson.Gson;
@@ -16,6 +17,14 @@ class Arguments {
 	
 	public Vector3D getAsVector3D(String argName) {
 		return this.gson.fromJson(this.jsonArgs.get(argName), Vector3D.class);
+	}
+	
+	public Vector2D getAsVector2D(String argName) {
+		return this.gson.fromJson(this.jsonArgs.get(argName), Vector2D.class);
+	}
+	
+	public double[] getDoubleArray(String argName) {
+		return this.gson.fromJson(this.jsonArgs.get(argName), double[].class);
 	}
 	
 	public MouseButtonState getAsMouseButton(String argName) {

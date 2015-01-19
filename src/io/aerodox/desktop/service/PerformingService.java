@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.imitation.Environment;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.translation.Action;
 
@@ -16,9 +17,12 @@ import io.aerodox.desktop.translation.Action;
  */
 public class PerformingService {
 	private Performer performer;
+	private Environment env;
 	private ExecutorService executor;
+	
 	private PerformingService() {
 		this.performer = new Performer();
+		this.env = new Environment();
 		this.executor = Executors.newSingleThreadExecutor();
 	}
 	
@@ -31,7 +35,7 @@ public class PerformingService {
 
 			@Override
 			public void run() {
-				Object response = action.perform(performer);
+				Object response = action.perform(performer, env);
 				if (response != null) {
 					channel.respond(response);
 				}

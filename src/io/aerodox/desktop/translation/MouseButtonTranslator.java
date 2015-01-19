@@ -3,6 +3,7 @@
  */
 package io.aerodox.desktop.translation;
 
+import io.aerodox.desktop.imitation.Environment;
 import io.aerodox.desktop.imitation.MouseButtonState;
 import io.aerodox.desktop.imitation.Performer;
 
@@ -17,7 +18,7 @@ public class MouseButtonTranslator implements SubTranslator {
 	 */
 	@Override
 	public Action translate(Arguments args) {
-		return new MouseButtonAction(args.getAsMouseButton("button"));
+		return new MouseButtonAction(args.getAsMouseButton("btnState"));
 	}
 	
 	private class MouseButtonAction implements Action {
@@ -28,8 +29,8 @@ public class MouseButtonTranslator implements SubTranslator {
 			
 		}
 		@Override
-		public Object perform(Performer performer) {
-			System.out.println("performing button");
+		public Object perform(Performer performer, Environment env) {
+//			System.out.println("performing button" + this.btnState.isPress());
 			performer.mouseButton(this.btnState);
 			return null;
 		}

@@ -111,7 +111,7 @@ public class DesktopPrototype {
 			reader.beginArray();
 			
 			for(int i = 0;reader.hasNext(); i++) {
-				System.out.println(this.parser.parse(reader).getAsJsonObject().get("action").getAsString());
+				moveMouse(toLinearAcc(this.parser.parse(reader).getAsJsonObject().get("gyro")));
 			}
 			
 			reader.endArray();

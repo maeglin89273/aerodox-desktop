@@ -3,6 +3,7 @@
  */
 package io.aerodox.desktop.translation;
 
+import io.aerodox.desktop.imitation.Environment;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.math.Vector3D;
 
@@ -28,7 +29,7 @@ public class SwipeTranslator implements SubTranslator {
 			
 		}
 		@Override
-		public Object perform(Performer performer) {
+		public Object perform(Performer performer, Environment env) {
 			System.out.println("performing swipe");
 			return null;
 		}

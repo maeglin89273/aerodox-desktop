@@ -20,11 +20,11 @@ import java.awt.event.InputEvent;
 public class Performer {
 	private Robot delegate;
 	
-	private final Dimension screenSize;
+	private final Dimension screenSize = null;
 	
 	public Performer() {
 		
-		this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
 		try {
 			this.delegate = new Robot();
 		} catch (AWTException e) {
@@ -41,14 +41,15 @@ public class Performer {
 		}
 	}
 	
-	public synchronized boolean mouseShift(Vector2D delta) {
-		Point cursorPos = MouseInfo.getPointerInfo().getLocation();
-		int x = round(cursorPos.getX() + delta.getX());
-		int y = round(cursorPos.getY() + delta.getY());
+	public synchronized boolean mouseMove(Vector2D pos) {
+		
+		int x = round(pos.getX());
+		int y = round(pos.getY());
 		
 		this.delegate.mouseMove(x, y);
 		
-		return this.isOutOfMonitor(x, y);
+		return false;
+//		return this.isOutOfMonitor(x, y);
 		
 	}
 	

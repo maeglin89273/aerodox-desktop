@@ -33,7 +33,10 @@ public abstract class Translator {
 		
 		String action = chunk.remove("action").getAsString();
 		try {
-			this.asyncDispatch(translatorMap.get(action).newInstance(), chunk, channel);
+			Class<? extends SubTranslator> translatorClass = translatorMap.get(action);
+			if (translatorClass != null) {
+				this.asyncDispatch(translatorClass.newInstance(), chunk, channel);
+			}
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}

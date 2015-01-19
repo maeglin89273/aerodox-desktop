@@ -31,6 +31,7 @@ public class LANConnection implements Connection {
 				
 		try {
 			this.delegate = new ServerSocket(AerodoxConfig.PORT);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			close();

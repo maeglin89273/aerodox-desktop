@@ -14,10 +14,11 @@ class TranslatorImpl extends Translator {
 	 */
 	@Override
 	protected void register() {
-		this.addTranslatorMapping("move", MouseMoveTranslator.class);
+//		this.addTranslatorMapping("move", MouseMoveTranslator.class);
 		this.addTranslatorMapping("button", MouseButtonTranslator.class);
 		this.addTranslatorMapping("swipe", SwipeTranslator.class);
 		this.addTranslatorMapping("config", ConfigurationTranslator.class);
+		this.addTranslatorMapping("touch", TouchTranslator.class);
 	}
 
 }
