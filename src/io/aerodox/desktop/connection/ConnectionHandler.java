@@ -45,8 +45,8 @@ public class ConnectionHandler implements Runnable {
 				
 				reader.endArray();
 			} catch (IOException e) {
-				e.printStackTrace();
-				
+//				e.printStackTrace();
+				System.out.println("this connection is lost. we will create a new one");
 			} finally {
 				close();
 			}

@@ -4,7 +4,7 @@
 package io.aerodox.desktop.translation;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
-import io.aerodox.desktop.imitation.PerformingService;
+import io.aerodox.desktop.service.PerformingService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +73,9 @@ public abstract class Translator {
 			@Override
 			public void run() {
 				Action action = translator.translate(new Arguments(args));
-				PerformingService.getInstance().queueAction(action, channel);
+				if (action != null) {
+					PerformingService.getInstance().queueAction(action, channel);
+				}
 			}
 			
 	}

@@ -1,12 +1,13 @@
 /**
  * 
  */
-package io.aerodox.desktop.imitation;
+package io.aerodox.desktop.service;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.translation.Action;
 
 /**
@@ -14,7 +15,6 @@ import io.aerodox.desktop.translation.Action;
  *
  */
 public class PerformingService {
-	private static PerformingService instance = null;
 	private Performer performer;
 	private ExecutorService executor;
 	private PerformingService() {
@@ -23,11 +23,7 @@ public class PerformingService {
 	}
 	
 	public static PerformingService getInstance() {
-		if (instance == null) {
-			instance = new PerformingService();
-		}
-		
-		return instance;
+		return SinglotenHolder.INSTANCE;
 	}
 	
 	public void queueAction(final Action action, final AsyncResponseChannel channel) {
@@ -46,5 +42,9 @@ public class PerformingService {
 	
 	public void closeService() {
 		this.executor.shutdownNow();
+	}
+	
+	private static class SinglotenHolder {
+		private static PerformingService INSTANCE = new PerformingService();
 	}
 }

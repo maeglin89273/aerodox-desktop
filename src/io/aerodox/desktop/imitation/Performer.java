@@ -29,7 +29,7 @@ public class Performer {
 			this.delegate = new Robot();
 		} catch (AWTException e) {
 //			e.printStackTrace();
-			System.out.println("no robot is supported on this machine");
+			System.out.println("Aerodox is supported on this machine");
 		}
 	}
 	

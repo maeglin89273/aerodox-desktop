@@ -4,7 +4,7 @@
 package io.aerodox.desktop.connection;
 
 import io.aerodox.desktop.AerodoxConfig;
-import io.aerodox.desktop.imitation.PerformingService;
+import io.aerodox.desktop.service.PerformingService;
 
 import java.io.IOException;
 import java.net.Inet4Address;

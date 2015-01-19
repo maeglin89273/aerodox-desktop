@@ -17,7 +17,7 @@ public class MouseButtonTranslator implements SubTranslator {
 	 */
 	@Override
 	public Action translate(Arguments args) {
-		return new MouseButtonAction(args.asMouseButton("button"));
+		return new MouseButtonAction(args.getAsMouseButton("button"));
 	}
 	
 	private class MouseButtonAction implements Action {
@@ -29,6 +29,7 @@ public class MouseButtonTranslator implements SubTranslator {
 		}
 		@Override
 		public Object perform(Performer performer) {
+			System.out.println("performing button");
 			performer.mouseButton(this.btnState);
 			return null;
 		}

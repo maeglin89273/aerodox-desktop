@@ -14,11 +14,15 @@ class Arguments {
 		this.gson  = new Gson();
 	}
 	
-	public Vector3D asVector3D(String argName) {
+	public Vector3D getAsVector3D(String argName) {
 		return this.gson.fromJson(this.jsonArgs.get(argName), Vector3D.class);
 	}
 	
-	public MouseButtonState asMouseButton(String argName) {
+	public MouseButtonState getAsMouseButton(String argName) {
 		return this.gson.fromJson(this.jsonArgs.get(argName), MouseButtonState.class);
+	}
+	
+	public JsonObject getRaw() {
+		return this.jsonArgs;
 	}
 }

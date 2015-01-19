@@ -3,9 +3,6 @@
  */
 package io.aerodox.desktop;
 
-import java.awt.MouseInfo;
-import java.awt.Toolkit;
-
 import io.aerodox.desktop.connection.LANConnection;
 import io.aerodox.desktop.prototype.DesktopPrototype;
 
