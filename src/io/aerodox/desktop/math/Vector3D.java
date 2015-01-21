@@ -3,19 +3,21 @@
  */
 package io.aerodox.desktop.math;
 
+import java.io.Serializable;
+
 /**
  * @author maeglin89273
  *
  */
-public class Vector3D {
-	private double x;
-	private double y;
-	private double z;
+public class Vector3D implements Serializable {
+	private float x;
+	private float y;
+	private float z;
 	
 	public Vector3D() {
 		this(0, 0, 0);
 	}
-	public Vector3D(double x, double y, double z) {
+	public Vector3D(float x, float y, float z) {
 		this.setX(x);
 		this.setY(y);
 		this.setZ(z);
@@ -26,29 +28,29 @@ public class Vector3D {
 	}
 	
  
-	public double getX() {
+	public float getX() {
 		return x;
 	}
 
-	public Vector3D setX(double x) {
+	public Vector3D setX(float x) {
 		this.x = x;
 		return this;
 	}
 
-	public double getY() {
+	public float getY() {
 		return y;
 	}
 
-	public Vector3D setY(double y) {
+	public Vector3D setY(float y) {
 		this.y = y;
 		return this;
 	}
 
-	public double getZ() {
+	public float getZ() {
 		return z;
 	}
 
-	public Vector3D setZ(double z) {
+	public Vector3D setZ(float z) {
 		this.z = z;
 		return this;
 	}
@@ -57,7 +59,7 @@ public class Vector3D {
 		return add(v.getX(), v.getY(), v.getZ());
 	}
 
-	public Vector3D add(double x, double y, double z) {
+	public Vector3D add(float x, float y, float z) {
 		this.x += x;
 		this.y += y;
 		this.z += z;
@@ -69,7 +71,7 @@ public class Vector3D {
 		return new Vector3D(a.getX() + b.getX(), a.getY() + b.getY(), a.getZ() + b.getZ());
 	}
 
-	public Vector3D addMagnitude(double mag) {
+	public Vector3D addMagnitude(float mag) {
 		return setMagnitude(getMagnitude() + mag);
 	}
 
@@ -77,7 +79,7 @@ public class Vector3D {
 		return this.set(v.getX(), v.getY(), v.getZ());
 	}
 
-	public Vector3D set(double x, double y, double z) {
+	public Vector3D set(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -85,16 +87,16 @@ public class Vector3D {
 		return this;
 	}
 
-	public double getSquare() {
+	public float getSquare() {
 		return this.x * this.x + this.y * this.y + this.z * this.z;
 	}
 
-	public double getMagnitude() {
-		return Math.sqrt(getSquare());
+	public float getMagnitude() {
+		return (float)Math.sqrt(getSquare());
 	}
 	
-	public Vector3D setMagnitude(double mag) {
-		double magLocal = getMagnitude();
+	public Vector3D setMagnitude(float mag) {
+		float magLocal = getMagnitude();
 		this.x *= mag / magLocal;
 		this.y *= mag / magLocal;
 		this.z *= mag / magLocal;
@@ -102,7 +104,7 @@ public class Vector3D {
 		return this;
 	}
 
-	public double dotProduct(Vector3D v) {
+	public float dotProduct(Vector3D v) {
 		return this.getX() * v.getX() + this.getY() * v.getY() + this.getZ() * v.getZ();
 	}
 
@@ -112,7 +114,7 @@ public class Vector3D {
 							this.getX() * v.getY() - this.getY() * v.getX());
 	}
 
-	public Vector3D divided(double divisor) {
+	public Vector3D divided(float divisor) {
 		this.x /= divisor;
 		this.y /= divisor;
 		this.z /= divisor;
@@ -120,11 +122,11 @@ public class Vector3D {
 		return this;
 	}
 
-	public static Vector3D divided(Vector3D v, double divisor) {
+	public static Vector3D divided(Vector3D v, float divisor) {
 		return new Vector3D(v.getX() / divisor, v.getY() / divisor, v.getZ() / divisor);
 	}
 
-	public Vector3D mutiply(double multiplicand) {
+	public Vector3D mutiply(float multiplicand) {
 		this.x *= multiplicand;
 		this.y *= multiplicand;
 		this.z *= multiplicand;
@@ -132,7 +134,7 @@ public class Vector3D {
 		return this;
 	}
 
-	public static Vector3D mutiply(Vector3D v, double multiplicand) {
+	public static Vector3D mutiply(Vector3D v, float multiplicand) {
 		return new Vector3D(v.getX() * multiplicand, v.getY() * multiplicand, v.getZ() * multiplicand);
 	}
 
@@ -140,7 +142,7 @@ public class Vector3D {
 		return minus(v.getX(), v.getY(), v.getZ());
 	}
 
-	public Vector3D minus(double x, double y, double z) {
+	public Vector3D minus(float x, float y, float z) {
 		this.x -= x;
 		this.y -= y;
 		this.z -= z;
@@ -152,7 +154,7 @@ public class Vector3D {
 		return new Vector3D(a.getX() - b.getX(), a.getY() - b.getY(), a.getZ() - b.getZ());
 	}
 	
-	public Vector3D minusMagnitude(double mag) {
+	public Vector3D minusMagnitude(float mag) {
 		return setMagnitude(getMagnitude() - mag);
 	}
 	
@@ -191,16 +193,16 @@ public class Vector3D {
 		return this;
 	}
 	
-	public Vector3D rotate(Vector3D axis, double thetaInRadians) {
+	public Vector3D rotate(Vector3D axis, float thetaInRadians) {
 		axis = Vector3D.normalized(axis);
-		double sin = Math.sin(thetaInRadians);
-		double cos = Math.cos(thetaInRadians);
-		double oneMCos = 1 - cos;
+		float sin = (float)Math.sin(thetaInRadians);
+		float cos = (float)Math.cos(thetaInRadians);
+		float oneMCos = 1 - cos;
 		
-		double aX = axis.getX();
-		double aY = axis.getY();
-		double aZ = axis.getZ();
-		double x = this.x, y = this.y, z = this.z;
+		float aX = axis.getX();
+		float aY = axis.getY();
+		float aZ = axis.getZ();
+		float x = this.x, y = this.y, z = this.z;
 		this.x = x * (cos + aX * aX * oneMCos) + y * (aX * aY * oneMCos - aZ * sin) + z * (aX * aZ * oneMCos);
 		this.y = x * (aY * aX * oneMCos + aZ * sin) + y * (cos + aY * aY * oneMCos) + z * (aY * aZ * oneMCos - aX * sin);
 		this.z = x * (aZ * aX * oneMCos + aY * sin) + y * (aZ * aY * oneMCos + aX * sin) + z * (cos + aZ * aZ * oneMCos);
@@ -208,8 +210,8 @@ public class Vector3D {
 		return this;
 	}
 	
-	public Vector3D applyMatrix(double[] m) {
-		double x = this.x, y = this.y, z = this.z;
+	public Vector3D applyMatrix(float[] m) {
+		float x = this.x, y = this.y, z = this.z;
 		this.x = m[0] * x + m[1] * y + m[2] * z;
 		this.y = m[3] * x + m[4] * y + m[5] * z;
 		this.z = m[6] * x + m[7] * y + m[8] * z;
@@ -223,7 +225,7 @@ public class Vector3D {
 	}
 	
 	public Vector3D normalized() {
-		double magnitude = getMagnitude();
+		float magnitude = getMagnitude();
 		x /= magnitude;
 		y /= magnitude;
 		z /= magnitude;
@@ -232,7 +234,7 @@ public class Vector3D {
 	}
 	
 	public static Vector3D normalized(Vector3D v) {
-		double magnitude = v.getMagnitude();
+		float magnitude = v.getMagnitude();
 		return new Vector3D(v.getX() / magnitude, v.getY() / magnitude, v.getZ() / magnitude);
 	}
 	

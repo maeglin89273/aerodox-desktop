@@ -18,7 +18,7 @@ class TranslatorImpl extends Translator {
 		this.addTranslatorMapping("button", MouseButtonTranslator.class);
 		this.addTranslatorMapping("swipe", SwipeTranslator.class);
 		this.addTranslatorMapping("config", ConfigurationTranslator.class);
-		this.addTranslatorMapping("touch", TouchTranslator.class);
+//		this.addTranslatorMapping("touch", TouchTranslator.class);
 	}
 
 }

@@ -13,7 +13,7 @@ import io.aerodox.desktop.service.ConfigurationService;
  *
  */
 public class TouchTranslator implements SubTranslator {
-	private static final double SCALE = 0.3;
+	private static final double SCALE = 0.6;
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translate(io.aerodox.desktop.translation.Arguments)
 	 */
@@ -21,7 +21,7 @@ public class TouchTranslator implements SubTranslator {
 	public Action translate(Arguments args) {
 		Vector2D mov = args.getAsVector2D("touchMov");
 		ConfigurationService config = ConfigurationService.getInstance();
-		double scale = config.getSensitivity() * SCALE;
+		float scale = (float) (config.getSensitivity() * SCALE);
 		return new TouchAction(mov.set(mov.getX() *  scale, mov.getY() * scale));
 	}
 	

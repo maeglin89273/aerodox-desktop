@@ -3,7 +3,8 @@
  */
 package io.aerodox.desktop;
 
-import io.aerodox.desktop.connection.LANConnection;
+import io.aerodox.desktop.connection.TCPLANConnection;
+import io.aerodox.desktop.connection.UDPLANConnection;
 import io.aerodox.desktop.prototype.DesktopPrototype;
 
 /**
@@ -12,7 +13,7 @@ import io.aerodox.desktop.prototype.DesktopPrototype;
  */
 public class DesktopLunacher {
 	public static void main(String[] args) {
-		new LANConnection().start();
+		new UDPLANConnection().start();
 	}
 	
 	

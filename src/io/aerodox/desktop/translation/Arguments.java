@@ -23,7 +23,7 @@ class Arguments {
 		return this.gson.fromJson(this.jsonArgs.get(argName), Vector2D.class);
 	}
 	
-	public double[] getDoubleArray(String argName) {
+	public double[] getAsDoubleArray(String argName) {
 		return this.gson.fromJson(this.jsonArgs.get(argName), double[].class);
 	}
 	

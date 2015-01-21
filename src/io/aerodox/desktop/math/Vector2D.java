@@ -10,36 +10,36 @@ import java.awt.Point;
  *
  */
 public class Vector2D {
-	private double x;
-	private double y;
+	private float x;
+	private float y;
 	
 	public Vector2D(Point point) {
-		this(point.getX(), point.getY());
+		this((float)point.getX(), (float)point.getY());
 	}
 	
-	public Vector2D(double x, double y) {
+	public Vector2D(float x, float y) {
 		this.set(x, y);
 	}
 	
-	public Vector2D set(double x, double y) {
+	public Vector2D set(float x, float y) {
 		this.x = x;
 		this.y = y;
 		return this;
 	}
 	
-	public double getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setX(double x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public double getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setY(double y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 	
@@ -47,7 +47,7 @@ public class Vector2D {
 		return this.add(vec.getX(), vec.getY());
 	}
 	
-	public Vector2D add(double x, double y) {
+	public Vector2D add(float x, float y) {
 		this.x += x;
 		this.y += y;
 		

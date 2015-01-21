@@ -19,13 +19,14 @@ public class ConfigurationService {
 	
 	private volatile int sensitivity;
 	private volatile Plane2D screenPlane;
-	private static final int DISTANCE_FACTOR = 50;
+	private static final int DISTANCE_FACTOR = 950;
+	private static final float PROJ_SHRINK_FACTOR = 0.75f;
 	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	private static final int SENSITIVITY_DEFAULT = 1;
 	private ConfigurationService() {
 		this.sensitivity = SENSITIVITY_DEFAULT;
-		this.screenPlane = new Plane2D(new Vector3D(-SCREEN_SIZE.getWidth() / 2, this.getDistance(), SCREEN_SIZE.getHeight() / 2),
+		this.screenPlane = new Plane2D(new Vector3D((float)-SCREEN_SIZE.getWidth() / 2, this.getDistance(), (float)SCREEN_SIZE.getHeight() / 2),
 								 new Vector3D(1, 0, 0), new Vector3D(0, 0, -1));
 	}
 	
@@ -38,16 +39,19 @@ public class ConfigurationService {
 		this.screenPlane.getOrigin().setY(this.getDistance());
 	}
 	
-	public double getDistance() {
+	public float getDistance() {
 		return this.getSensitivity() * DISTANCE_FACTOR;
 	}
-	
-	public double getScreenWidth() {
-		return this.SCREEN_SIZE.getWidth();
+	public float getProjectScale() {
+		return PROJ_SHRINK_FACTOR * getSensitivity();
 	}
 	
-	public double getScreenHeight() {
-		return this.SCREEN_SIZE.getHeight();
+	public float getScreenWidth() {
+		return (float)this.SCREEN_SIZE.getWidth();
+	}
+	
+	public float getScreenHeight() {
+		return (float)this.SCREEN_SIZE.getHeight();
 	}
 	
 	

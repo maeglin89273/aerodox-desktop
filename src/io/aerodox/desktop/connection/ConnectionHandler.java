@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
@@ -40,6 +41,8 @@ public class ConnectionHandler implements Runnable {
 				reader.beginArray();
 				
 				for(;reader.hasNext();) {
+					
+//					System.out.println(obj.toString().getBytes().length);
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), channel);
 				}
 				
