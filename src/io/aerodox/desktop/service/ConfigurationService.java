@@ -27,8 +27,8 @@ public class ConfigurationService {
 	
 	private ConfigurationService() {
 		this.sensitivity = SENSITIVITY_DEFAULT;
-		this.minDistance = (int)((SCREEN_SIZE.getWidth() + SCREEN_SIZE.getHeight()) / 4);
-		this.screenPlane = new Plane2D(new Vector3D((float)-SCREEN_SIZE.getWidth() / 2, this.getDistance(), (float)SCREEN_SIZE.getHeight() / 2),
+		this.minDistance = (int)((getScreenWidth() + getScreenHeight()) / 4);
+		this.screenPlane = new Plane2D(new Vector3D((float)-getScreenWidth() / 2, this.getDistance(), (float)getScreenHeight() / 2),
 								 new Vector3D(1, 0, 0), new Vector3D(0, 0, -1));
 	}
 	
@@ -46,12 +46,12 @@ public class ConfigurationService {
 	}
 	
 	
-	public float getScreenWidth() {
-		return (float)this.SCREEN_SIZE.getWidth();
+	public static float getScreenWidth() {
+		return (float)SCREEN_SIZE.getWidth();
 	}
 	
-	public float getScreenHeight() {
-		return (float)this.SCREEN_SIZE.getHeight();
+	public static float getScreenHeight() {
+		return (float)SCREEN_SIZE.getHeight();
 	}
 	
 	
