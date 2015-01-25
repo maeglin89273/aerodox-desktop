@@ -10,14 +10,14 @@ import java.io.Serializable;
  *
  */
 public class Vector3D implements Serializable {
-	private float x;
-	private float y;
-	private float z;
+	private double x;
+	private double y;
+	private double z;
 	
 	public Vector3D() {
 		this(0, 0, 0);
 	}
-	public Vector3D(float x, float y, float z) {
+	public Vector3D(double x, double y, double z) {
 		this.setX(x);
 		this.setY(y);
 		this.setZ(z);
@@ -28,29 +28,29 @@ public class Vector3D implements Serializable {
 	}
 	
  
-	public float getX() {
+	public double getX() {
 		return x;
 	}
 
-	public Vector3D setX(float x) {
+	public Vector3D setX(double x) {
 		this.x = x;
 		return this;
 	}
 
-	public float getY() {
+	public double getY() {
 		return y;
 	}
 
-	public Vector3D setY(float y) {
+	public Vector3D setY(double y) {
 		this.y = y;
 		return this;
 	}
 
-	public float getZ() {
+	public double getZ() {
 		return z;
 	}
 
-	public Vector3D setZ(float z) {
+	public Vector3D setZ(double z) {
 		this.z = z;
 		return this;
 	}
@@ -59,7 +59,7 @@ public class Vector3D implements Serializable {
 		return add(v.getX(), v.getY(), v.getZ());
 	}
 
-	public Vector3D add(float x, float y, float z) {
+	public Vector3D add(double x, double y, double z) {
 		this.x += x;
 		this.y += y;
 		this.z += z;
@@ -71,7 +71,7 @@ public class Vector3D implements Serializable {
 		return new Vector3D(a.getX() + b.getX(), a.getY() + b.getY(), a.getZ() + b.getZ());
 	}
 
-	public Vector3D addMagnitude(float mag) {
+	public Vector3D addMagnitude(double mag) {
 		return setMagnitude(getMagnitude() + mag);
 	}
 
@@ -79,7 +79,7 @@ public class Vector3D implements Serializable {
 		return this.set(v.getX(), v.getY(), v.getZ());
 	}
 
-	public Vector3D set(float x, float y, float z) {
+	public Vector3D set(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -87,16 +87,16 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 
-	public float getSquare() {
+	public double getSquare() {
 		return this.x * this.x + this.y * this.y + this.z * this.z;
 	}
 
-	public float getMagnitude() {
-		return (float)Math.sqrt(getSquare());
+	public double getMagnitude() {
+		return (double)Math.sqrt(getSquare());
 	}
 	
-	public Vector3D setMagnitude(float mag) {
-		float magLocal = getMagnitude();
+	public Vector3D setMagnitude(double mag) {
+		double magLocal = getMagnitude();
 		this.x *= mag / magLocal;
 		this.y *= mag / magLocal;
 		this.z *= mag / magLocal;
@@ -104,7 +104,7 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 
-	public float dotProduct(Vector3D v) {
+	public double dotProduct(Vector3D v) {
 		return this.getX() * v.getX() + this.getY() * v.getY() + this.getZ() * v.getZ();
 	}
 
@@ -114,7 +114,7 @@ public class Vector3D implements Serializable {
 							this.getX() * v.getY() - this.getY() * v.getX());
 	}
 
-	public Vector3D divided(float divisor) {
+	public Vector3D divided(double divisor) {
 		this.x /= divisor;
 		this.y /= divisor;
 		this.z /= divisor;
@@ -122,11 +122,11 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 
-	public static Vector3D divided(Vector3D v, float divisor) {
+	public static Vector3D divided(Vector3D v, double divisor) {
 		return new Vector3D(v.getX() / divisor, v.getY() / divisor, v.getZ() / divisor);
 	}
 
-	public Vector3D mutiply(float multiplicand) {
+	public Vector3D mutiply(double multiplicand) {
 		this.x *= multiplicand;
 		this.y *= multiplicand;
 		this.z *= multiplicand;
@@ -134,7 +134,7 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 
-	public static Vector3D mutiply(Vector3D v, float multiplicand) {
+	public static Vector3D mutiply(Vector3D v, double multiplicand) {
 		return new Vector3D(v.getX() * multiplicand, v.getY() * multiplicand, v.getZ() * multiplicand);
 	}
 
@@ -142,7 +142,7 @@ public class Vector3D implements Serializable {
 		return minus(v.getX(), v.getY(), v.getZ());
 	}
 
-	public Vector3D minus(float x, float y, float z) {
+	public Vector3D minus(double x, double y, double z) {
 		this.x -= x;
 		this.y -= y;
 		this.z -= z;
@@ -154,7 +154,7 @@ public class Vector3D implements Serializable {
 		return new Vector3D(a.getX() - b.getX(), a.getY() - b.getY(), a.getZ() - b.getZ());
 	}
 	
-	public Vector3D minusMagnitude(float mag) {
+	public Vector3D minusMagnitude(double mag) {
 		return setMagnitude(getMagnitude() - mag);
 	}
 	
@@ -193,16 +193,16 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 	
-	public Vector3D rotate(Vector3D axis, float thetaInRadians) {
+	public Vector3D rotate(Vector3D axis, double thetaInRadians) {
 		axis = Vector3D.normalized(axis);
-		float sin = (float)Math.sin(thetaInRadians);
-		float cos = (float)Math.cos(thetaInRadians);
-		float oneMCos = 1 - cos;
+		double sin = (double)Math.sin(thetaInRadians);
+		double cos = (double)Math.cos(thetaInRadians);
+		double oneMCos = 1 - cos;
 		
-		float aX = axis.getX();
-		float aY = axis.getY();
-		float aZ = axis.getZ();
-		float x = this.x, y = this.y, z = this.z;
+		double aX = axis.getX();
+		double aY = axis.getY();
+		double aZ = axis.getZ();
+		double x = this.x, y = this.y, z = this.z;
 		this.x = x * (cos + aX * aX * oneMCos) + y * (aX * aY * oneMCos - aZ * sin) + z * (aX * aZ * oneMCos);
 		this.y = x * (aY * aX * oneMCos + aZ * sin) + y * (cos + aY * aY * oneMCos) + z * (aY * aZ * oneMCos - aX * sin);
 		this.z = x * (aZ * aX * oneMCos + aY * sin) + y * (aZ * aY * oneMCos + aX * sin) + z * (cos + aZ * aZ * oneMCos);
@@ -210,8 +210,8 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 	
-	public Vector3D applyMatrix(float[] m) {
-		float x = this.x, y = this.y, z = this.z;
+	public Vector3D applyMatrix(double[] m) {
+		double x = this.x, y = this.y, z = this.z;
 		this.x = m[0] * x + m[1] * y + m[2] * z;
 		this.y = m[3] * x + m[4] * y + m[5] * z;
 		this.z = m[6] * x + m[7] * y + m[8] * z;
@@ -225,7 +225,7 @@ public class Vector3D implements Serializable {
 	}
 	
 	public Vector3D normalized() {
-		float magnitude = getMagnitude();
+		double magnitude = getMagnitude();
 		x /= magnitude;
 		y /= magnitude;
 		z /= magnitude;
@@ -234,7 +234,7 @@ public class Vector3D implements Serializable {
 	}
 	
 	public static Vector3D normalized(Vector3D v) {
-		float magnitude = v.getMagnitude();
+		double magnitude = v.getMagnitude();
 		return new Vector3D(v.getX() / magnitude, v.getY() / magnitude, v.getZ() / magnitude);
 	}
 	

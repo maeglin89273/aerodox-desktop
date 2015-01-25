@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.zip.Deflater;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
@@ -29,11 +30,26 @@ public class ClassTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-//		Vector3D v = new Vector3D(1, 1, 1);
-//		Vector2D proj = v.projectToPlane(new Vector3D(500, 1, 500), new Vector3D(-1, 0, 0), new Vector3D(0, 0, -1));
-//		System.out.println(proj.getX() + " " + proj.getY());
-		testSize();
-//		"123".getBytes();
+		testCompress();
+//		System.out.println(Long.toString(235312571257L, 36));
+	}
+	
+	private static void testCompress() {
+		String json = "{\"rot\":{\"z\":0.8715385794639587,\"y\":0.05660635977983475,\"x\":-0.011508936993777752},\"action\":\"move\"}";
+		System.out.println(json.length());
+//		byte[] buffer = new byte[100];
+//		byte[] data = json.getBytes();
+//		int size = compress(data, buffer);
+//		System.out.println(data.length + " " + size);
+	}
+	
+	private static int compress(byte[] data, byte[] buffer) {
+		Deflater compresser = new Deflater();
+		compresser.setInput(data);
+		compresser.finish();
+		int size = compresser.deflate(buffer);
+		compresser.end();
+		return size;
 	}
 	
 	private static void testSize() throws IOException {

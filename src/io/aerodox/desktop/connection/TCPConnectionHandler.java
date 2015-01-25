@@ -20,12 +20,12 @@ import com.google.gson.stream.JsonReader;
  * @author maeglin89273
  *
  */
-public class ConnectionHandler implements Runnable {
+public class TCPConnectionHandler implements Runnable {
 	
 	private Socket socket;
 	private Translator translator;
 	private JsonParser parser;
-	public ConnectionHandler(Socket socket) {
+	public TCPConnectionHandler(Socket socket) {
 		this.socket = socket;
 		this.translator = Translator.newTranslator();
 		this.parser = new JsonParser();
@@ -37,7 +37,7 @@ public class ConnectionHandler implements Runnable {
 	@Override
 	public void run() {
 			try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-				AsyncResponseChannel channel = new AsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
+				AsyncResponseChannel channel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
 				reader.beginArray();
 				
 				for(;reader.hasNext();) {

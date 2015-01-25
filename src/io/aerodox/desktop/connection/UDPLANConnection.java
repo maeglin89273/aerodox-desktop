@@ -4,12 +4,14 @@
 package io.aerodox.desktop.connection;
 
 import io.aerodox.desktop.AerodoxConfig;
+import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.translation.Translator;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.charset.Charset;
 
 import com.google.gson.JsonParser;
 
@@ -19,12 +21,15 @@ import com.google.gson.JsonParser;
  */
 public class UDPLANConnection extends LANConnection {
 	
-	private static final int BUFFER_SIZE = 1 << 9;
+	private static final int BUFFER_SIZE = 1 << 8;
 	
 	private DatagramSocket delegate;
 	private byte[] buffer;
 	private Translator translator;
 	private JsonParser parser;
+	
+	private DelayEstimator delay;
+	
 	
 	public UDPLANConnection() {
 		try {
@@ -36,6 +41,7 @@ public class UDPLANConnection extends LANConnection {
 		this.buffer = new byte[BUFFER_SIZE];
 		this.translator = Translator.newTranslator();
 		this.parser = new JsonParser();
+		this.delay = new DelayEstimator(200, DelayEstimator.Unit.MS);
 	}
 	
 	@Override
@@ -46,16 +52,13 @@ public class UDPLANConnection extends LANConnection {
 
 	private void recieveDatagram() {
 		DatagramPacket actionPacket;
-		try {
+		try (AsyncResponseChannel channel = new DatagramAsyncResponseChannel(this.delegate)) {
 			for (;!delegate.isClosed();) {
-				long time = System.nanoTime();
+				delay.start();
 				actionPacket = new DatagramPacket(this.buffer, this.buffer.length);
 				delegate.receive(actionPacket);
-				long diff = System.nanoTime() - time;
-				if (diff > 500000000) {
-					System.out.printf("delay about %.2fms\n", diff / 1000000.0);
-				}
-				handlePacket(actionPacket);
+				delay.estimate();
+				handlePacket(actionPacket, channel);
 				
 			}
 			
@@ -65,11 +68,9 @@ public class UDPLANConnection extends LANConnection {
 		}
 	}
 	
-	private void handlePacket(DatagramPacket packet) {
-		
+	private void handlePacket(DatagramPacket packet, AsyncResponseChannel channel) {
 		String jsonLiteral = new String(packet.getData(), 0, packet.getLength());
-//		System.out.println(this.parser.parse(jsonLiteral).getAsJsonObject().toString());
-		translator.asyncTranslate(this.parser.parse(jsonLiteral).getAsJsonObject(), null);
+		translator.asyncTranslate(this.parser.parse(jsonLiteral).getAsJsonObject(), channel);
 		
 	}
 	

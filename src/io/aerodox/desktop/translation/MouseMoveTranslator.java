@@ -18,35 +18,30 @@ import io.aerodox.desktop.service.ConfigurationService;
  *
  */
 public class MouseMoveTranslator implements SubTranslator {
-	private static final float MAG1 = 5;
-	private static final float MAG2 = 2;
-	private static final float THRESHOLD = 0.7f;
+	private static final double MAG1 = 5;
+	private static final double MAG2 = 2;
+	private static final double THRESHOLD = 0.7f;
 	
 
 	@Override
 	public Action translate(Arguments args) {
-//		Vector3D gyro = args.getAsVector3D("gyro");
-//		gyro.negateX();
-//		gyro.negateZ();
-//		gyro.mutiply(MAG1);
-//		
+//		Vector3D gyro = args.getAsVector3D("acc");
 //		acc.negateX();
 //		acc.mutiply(MAG1 * ConfigurationService.getInstance().getSensitivity());
 //		acc = adjustAcc(acc);
 		
-		Vector3D rotVec = args.getAsVector3D("rotVec");
+		Vector3D rotVec = args.getAsVector3D("rot");
 		Vector2D pos = projectToScreen(getRotationMatrixFromVector(rotVec));
-//		
+		
 		return new MouseMoveAction(pos);
-//		return new MouseMoveAction(new Vector2D(gyro.getZ(), gyro.getX()));
 	}
 	
-	private Vector2D projectToScreen(float[] rotMat) {
+	private Vector2D projectToScreen(double[] rotMat) {
 		Vector3D ray = initPointer();
 		ray.applyMatrix(rotMat);
 		ConfigurationService config = ConfigurationService.getInstance();
-		float scale = config.getDistance() / ray.getY();
-		ray.mutiply(scale * config.getProjectScale());
+		double scale = config.getDistance() / ray.getY();
+		ray.mutiply(scale);
 		
 		return ray.projectToPlane(config.getScreenPlane());
 	}
@@ -58,52 +53,36 @@ public class MouseMoveTranslator implements SubTranslator {
 		
 		vec.minus(0, 0, 0.5f);
 		vec.set(filterValue(vec.getX()), filterValue(vec.getY()), filterValue(vec.getZ()));
-//		float aX = Math.abs(vec.getX()), aY = Math.abs(vec.getY()), aZ = Math.abs(vec.getZ());
-//		if (aX > aY && aX > aZ) {
-//			return new Vector3D(vec.getX(), 0, 0);
-//		}
 //		
-//		if (aY > aX && aY > aZ) {
-//			return new Vector3D(0, vec.getY(), 0);
-//		}
-//		
-//		if (aZ > aX && aZ > aY) {
-//			return new Vector3D(0, 0, vec.getZ());
-//		}
 		return vec;
-//		return new Vector3D();
-		
-//		
-//		vec.mutiply(MAG1);
-//		vec.round();
-//		vec.mutiply(MAG2);
+
 	}
 	
-	private float filterValue(float v) {
+	private double filterValue(double v) {
 		return Math.abs(v) <= THRESHOLD? 0 : v;
 	}
 	
-	private static float[] getRotationMatrixFromVector(Vector3D rotationVector) {
+	private static double[] getRotationMatrixFromVector(Vector3D rotationVector) {
 		
-		float[] rotationMatrix = new float[9];
+		double[] rotationMatrix = new double[9];
 		
-        float q0;
-        float q1 = rotationVector.getX();
-        float q2 = rotationVector.getY();
-        float q3 = rotationVector.getZ();
+        double q0;
+        double q1 = rotationVector.getX();
+        double q2 = rotationVector.getY();
+        double q3 = rotationVector.getZ();
 
         q0 = 1 - q1*q1 - q2*q2 - q3*q3;
-        q0 = (q0 > 0) ? (float)Math.sqrt(q0) : 0;
+        q0 = (q0 > 0) ? (double)Math.sqrt(q0) : 0;
 
-        float sq_q1 = 2 * q1 * q1;
-        float sq_q2 = 2 * q2 * q2;
-        float sq_q3 = 2 * q3 * q3;
-        float q1_q2 = 2 * q1 * q2;
-        float q3_q0 = 2 * q3 * q0;
-        float q1_q3 = 2 * q1 * q3;
-        float q2_q0 = 2 * q2 * q0;
-        float q2_q3 = 2 * q2 * q3;
-        float q1_q0 = 2 * q1 * q0;
+        double sq_q1 = 2 * q1 * q1;
+        double sq_q2 = 2 * q2 * q2;
+        double sq_q3 = 2 * q3 * q3;
+        double q1_q2 = 2 * q1 * q2;
+        double q3_q0 = 2 * q3 * q0;
+        double q1_q3 = 2 * q1 * q3;
+        double q2_q0 = 2 * q2 * q0;
+        double q2_q3 = 2 * q2 * q3;
+        double q1_q0 = 2 * q1 * q0;
 
         rotationMatrix[0] = 1 - sq_q2 - sq_q3;
         rotationMatrix[1] = q1_q2 - q3_q0;
@@ -122,23 +101,33 @@ public class MouseMoveTranslator implements SubTranslator {
 	
 	private class MouseMoveAction implements Action {
 		
-		Vector2D acc;
-		
-		private MouseMoveAction(Vector2D acc) {
-			this.acc = acc;
+		Vector2D pos;
+		private static final double SLOWER_FACTOR = 0.1;
+		private MouseMoveAction(Vector2D pos) {
+			this.pos = pos;
 		}
 		
 		@Override
 		public Object perform(Performer performer, Environment env) {
-//			System.out.println("performing move x:" + this.pos.getX() + " y:" + this.pos.getY());
-//			Vector3D vel = env.getVelocityReference().add(this.acc);
-//			System.out.println(vel);
-//			performer.mouseMove(acc.add(env.getMousePosition()));
-			performer.mouseMove(acc);
+//			Vector2D curPos = env.getMousePosition();
+//			Vector2D delta = slowDown(pos, curPos);
+//			if (!isVecTooSmall(delta)) {
+//				performer.mouseMove(curPos.add(delta));
+//			}
+			performer.mouseMove(pos);
 			return null;
 		}
 		
+		private Vector2D slowDown(Vector2D pos, Vector2D curPos) { 
+			Vector2D delta = Vector2D.minus(pos, curPos);
+			return delta.mutiply(SLOWER_FACTOR);
+			
+		}
 		
+		private boolean isVecTooSmall(Vector2D vec) {
+			return (int)vec.getX() == 0 && (int)vec.getY() == 0;
+				
+		}
 	}
 
 }

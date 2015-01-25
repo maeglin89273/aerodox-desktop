@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 class Arguments {
+	private static final double EXPO = 10000000.0;
+	
 	private final Gson gson;
 	private final JsonObject jsonArgs;
 	Arguments(JsonObject jsonArgs) {
@@ -16,11 +18,22 @@ class Arguments {
 	}
 	
 	public Vector3D getAsVector3D(String argName) {
-		return this.gson.fromJson(this.jsonArgs.get(argName), Vector3D.class);
+		double[] vector = decompressVec(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
+		return new Vector3D(vector[0], vector[1], vector[2]);
+	}
+	
+	private double[] decompressVec(String[] compressedVec) {
+		double[] vector = new double[compressedVec.length];
+		for (int i = 0; i < vector.length; i++) {
+			vector[i] = Long.valueOf(compressedVec[i], 36) / EXPO;
+		}
+		
+		return vector;
 	}
 	
 	public Vector2D getAsVector2D(String argName) {
-		return this.gson.fromJson(this.jsonArgs.get(argName), Vector2D.class);
+		double[] vector = decompressVec(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
+		return new Vector2D(vector[0], vector[1]);
 	}
 	
 	public double[] getAsDoubleArray(String argName) {

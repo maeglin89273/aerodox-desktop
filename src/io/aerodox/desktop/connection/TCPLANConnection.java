@@ -52,7 +52,7 @@ public class TCPLANConnection extends LANConnection {
 	private void listenActions() {
 		try {
 			for (;!this.delegate.isClosed();) {
-				this.executor.execute(new ConnectionHandler(this.delegate.accept()));
+				this.executor.execute(new TCPConnectionHandler(this.delegate.accept()));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

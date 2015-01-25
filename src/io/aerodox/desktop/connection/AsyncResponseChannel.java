@@ -14,14 +14,14 @@ import com.google.gson.Gson;
  * @author maeglin89273
  *
  */
-public class AsyncResponseChannel implements AutoCloseable {
+public abstract class AsyncResponseChannel implements AutoCloseable {
 	private Gson gson;
 	private ExecutorService executor;
-	private Writer writer;
-	public AsyncResponseChannel(Writer writer) {
+	
+	public AsyncResponseChannel() {
 		this.gson = new Gson();
 		this.executor = Executors.newSingleThreadExecutor();
-		this.writer = writer;
+		
 	}
 	
 	public void respond(final Object response) {
@@ -29,10 +29,11 @@ public class AsyncResponseChannel implements AutoCloseable {
 
 			@Override
 			public void run() {
+				String jsonLiteral = gson.toJson(response);
 				
-				gson.toJson(response, writer);
 				try {
-					writer.flush();
+					write(jsonLiteral);
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -41,9 +42,10 @@ public class AsyncResponseChannel implements AutoCloseable {
 		});
 	}
 	
+	protected abstract void write(String jsonLiteral) throws IOException;
+	
 	@Override
 	public void close() throws IOException {
-		writer.close();
 		executor.shutdown();
 	}
 }

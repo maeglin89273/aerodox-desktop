@@ -31,7 +31,7 @@ public abstract class Translator {
 	
 	public void asyncTranslate(JsonObject chunk, AsyncResponseChannel channel) {
 		
-		String action = chunk.remove("action").getAsString();
+		String action = chunk.remove("act").getAsString();
 		try {
 			Class<? extends SubTranslator> translatorClass = translatorMap.get(action);
 			if (translatorClass != null) {

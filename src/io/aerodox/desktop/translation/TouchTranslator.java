@@ -21,7 +21,7 @@ public class TouchTranslator implements SubTranslator {
 	public Action translate(Arguments args) {
 		Vector2D mov = args.getAsVector2D("touchMov");
 		ConfigurationService config = ConfigurationService.getInstance();
-		float scale = (float) (config.getSensitivity() * SCALE);
+		float scale = (float) (config.getSensitivity() * SCALE / 100000.0);
 		return new TouchAction(mov.set(mov.getX() *  scale, mov.getY() * scale));
 	}
 	
