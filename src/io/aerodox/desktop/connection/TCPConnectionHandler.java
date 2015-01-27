@@ -3,6 +3,8 @@
  */
 package io.aerodox.desktop.connection;
 
+import io.aerodox.desktop.test.DelayEstimator;
+import io.aerodox.desktop.test.DelayEstimator.Unit;
 import io.aerodox.desktop.translation.Translator;
 
 import java.io.BufferedReader;
@@ -26,9 +28,10 @@ public class TCPConnectionHandler implements Runnable {
 	private Socket socket;
 	private Translator translator;
 	private JsonParser parser;
+	private DelayEstimator estimator;
 	public TCPConnectionHandler(Socket socket) {
 		this.socket = socket;
-		
+		this.estimator = new DelayEstimator(100, Unit.MS);	
 		
 		this.translator = Translator.newTranslator();
 		this.parser = new JsonParser();
@@ -43,10 +46,11 @@ public class TCPConnectionHandler implements Runnable {
 				AsyncResponseChannel channel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
 				reader.beginArray();
 				
-				for(;reader.hasNext();) {
+				for(this.estimator.start();reader.hasNext();this.estimator.start()) {
 					
 //					System.out.println(obj.toString().getBytes().length);
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), channel);
+					this.estimator.estimate();
 				}
 				
 				reader.endArray();

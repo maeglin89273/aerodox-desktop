@@ -32,7 +32,7 @@ public class ConfigurationService {
 	private static final int DISTANCE_PER_SENSITIVITY = (int)getScreenWidth() / 6;
 	
 	private static final double DEGREE_TO_RADIAN = Math.PI / 180;
-	private static final double UPPER_BOUND_OF_MIN_ROTATION_DEGREE = 0.1;
+	private static final double UPPER_BOUND_OF_MIN_ROTATION_DEGREE = 0.2;
 	private static final double DEGREE_PER_SENSITIVITY = -UPPER_BOUND_OF_MIN_ROTATION_DEGREE / SENSITIVITY_RANGE;
 	
 	

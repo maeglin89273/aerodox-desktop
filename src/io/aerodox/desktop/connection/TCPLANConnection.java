@@ -5,6 +5,8 @@ package io.aerodox.desktop.connection;
 
 import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.service.PerformingService;
+import io.aerodox.desktop.test.DelayEstimator;
+import io.aerodox.desktop.test.DelayEstimator.Unit;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -26,9 +28,11 @@ public class TCPLANConnection extends LANConnection {
 	
 	private ServerSocket delegate;
 	private ExecutorService executor;
+	
+	
 	public TCPLANConnection() {
 		this.executor = Executors.newCachedThreadPool();
-				
+			
 		try {
 			this.delegate = new ServerSocket(AerodoxConfig.PORT);
 		} catch (IOException e) {
