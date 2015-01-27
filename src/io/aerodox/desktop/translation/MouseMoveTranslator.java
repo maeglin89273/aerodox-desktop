@@ -28,7 +28,6 @@ public class MouseMoveTranslator implements ActionTranslator {
 		if (rotVec.getSquare() <= threshold * threshold) {
 			return null;
 		}
-				
 		return new MouseMoveAction(MathUtility.getRotationMatrixFromVector(rotVec));
 	}
 	

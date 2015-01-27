@@ -19,24 +19,29 @@ public class ConfigurationService {
 	
 	
 	private volatile int sensitivity;
-	private volatile Plane2D screenPlane;
-	private final int minDistance;
-	private double rotationThreshold;
 	
-	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-	private static final int DISTANCE_PER_SENSITIVITY = (int)getScreenWidth() / 6;
+	private volatile Plane2D screenPlane;
+	private volatile int distance;
+	private volatile double rotationThreshold;
+	
 	private static final int SENSITIVITY_DEFAULT = 3;
 	private static final int SENSITIVITY_RANGE = 10;
 	
-	private static final double UPPER_BOUND_OF_MIN_ROTATION_DEGREE = 0.3;
-	private static final double DEGREE_PER_SENSITIVITY = -UPPER_BOUND_OF_MIN_ROTATION_DEGREE / SENSITIVITY_RANGE;
+	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+	private static final int MIN_DISTANCE = (int)((getScreenWidth() + getScreenHeight()) / 4);
+	private static final int DISTANCE_PER_SENSITIVITY = (int)getScreenWidth() / 6;
+	
 	private static final double DEGREE_TO_RADIAN = Math.PI / 180;
+	private static final double UPPER_BOUND_OF_MIN_ROTATION_DEGREE = 0.1;
+	private static final double DEGREE_PER_SENSITIVITY = -UPPER_BOUND_OF_MIN_ROTATION_DEGREE / SENSITIVITY_RANGE;
+	
 	
 	private ConfigurationService() {
-		this.sensitivity = SENSITIVITY_DEFAULT;
-		this.minDistance = (int)((getScreenWidth() + getScreenHeight()) / 4);
+		
 		this.screenPlane = new Plane2D(new Vector3D(-getScreenWidth() / 2, this.getDistance(), getScreenHeight() / 2),
 								 new Vector3D(1, 0, 0), new Vector3D(0, 0, -1));
+		
+		this.setSensitivity(SENSITIVITY_DEFAULT);
 	}
 	
 	public int getSensitivity() {
@@ -45,12 +50,17 @@ public class ConfigurationService {
 	
 	public synchronized void setSensitivity(int sensitivity) {
 		this.sensitivity = sensitivity;
+		this.setOtherConfigsDependsOnSensitivity(sensitivity);
+	}
+	
+	private void setOtherConfigsDependsOnSensitivity(int sensitivity) {
+		this.rotationThreshold = Math.sin((sensitivity * DEGREE_PER_SENSITIVITY + UPPER_BOUND_OF_MIN_ROTATION_DEGREE) * DEGREE_TO_RADIAN * 0.5);
+		this.distance = MIN_DISTANCE + sensitivity * DISTANCE_PER_SENSITIVITY;
 		this.screenPlane.getOrigin().setY(this.getDistance());
-		this.rotationThreshold = Math.sin((this.getSensitivity() * DEGREE_PER_SENSITIVITY + UPPER_BOUND_OF_MIN_ROTATION_DEGREE) * DEGREE_TO_RADIAN * 0.5);
 	}
 	
 	public float getDistance() {
-		return this.minDistance + getSensitivity() * DISTANCE_PER_SENSITIVITY;
+		return this.distance;
 	}
 	
 	public double getRotationThreshold() {
