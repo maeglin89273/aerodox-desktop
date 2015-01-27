@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -27,6 +28,8 @@ public class TCPConnectionHandler implements Runnable {
 	private JsonParser parser;
 	public TCPConnectionHandler(Socket socket) {
 		this.socket = socket;
+		
+		
 		this.translator = Translator.newTranslator();
 		this.parser = new JsonParser();
 		

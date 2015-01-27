@@ -11,7 +11,7 @@ import io.aerodox.desktop.math.Vector3D;
  * @author maeglin89273
  *
  */
-public class SwipeTranslator implements SubTranslator {
+public class SwipeTranslator implements ActionTranslator {
 
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translateToAction(io.aerodox.desktop.translation.SubTranslator.Arguments)

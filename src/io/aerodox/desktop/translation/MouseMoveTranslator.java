@@ -8,6 +8,7 @@ import java.awt.Point;
 
 import io.aerodox.desktop.imitation.Environment;
 import io.aerodox.desktop.imitation.Performer;
+import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
 import io.aerodox.desktop.service.ConfigurationService;
@@ -17,117 +18,69 @@ import io.aerodox.desktop.service.ConfigurationService;
  * @author maeglin89273
  *
  */
-public class MouseMoveTranslator implements SubTranslator {
-	private static final double MAG1 = 5;
-	private static final double MAG2 = 2;
-	private static final double THRESHOLD = 0.7f;
+public class MouseMoveTranslator implements ActionTranslator {
 	
-
 	@Override
 	public Action translate(Arguments args) {
-//		Vector3D gyro = args.getAsVector3D("acc");
-//		acc.negateX();
-//		acc.mutiply(MAG1 * ConfigurationService.getInstance().getSensitivity());
-//		acc = adjustAcc(acc);
-		
-		Vector3D rotVec = args.getAsVector3D("rot");
-		Vector2D pos = projectToScreen(getRotationMatrixFromVector(rotVec));
-		
-		return new MouseMoveAction(pos);
+
+		Vector3D rotVec = args.getAsVector3D("gyro");
+		double threshold = ConfigurationService.getInstance().getRotationThreshold();
+		if (rotVec.getSquare() <= threshold * threshold) {
+			return null;
+		}
+				
+		return new MouseMoveAction(MathUtility.getRotationMatrixFromVector(rotVec));
 	}
 	
-	private Vector2D projectToScreen(double[] rotMat) {
-		Vector3D ray = initPointer();
-		ray.applyMatrix(rotMat);
-		ConfigurationService config = ConfigurationService.getInstance();
-		double scale = config.getDistance() / ray.getY();
-		ray.mutiply(scale);
-		
-		return ray.projectToPlane(config.getScreenPlane());
-	}
-
-	private static Vector3D initPointer() {
-		return new Vector3D(0, 1, 0);
-	}
-	private Vector3D adjustAcc(Vector3D vec) {
-		
-		vec.minus(0, 0, 0.5f);
-		vec.set(filterValue(vec.getX()), filterValue(vec.getY()), filterValue(vec.getZ()));
-//		
-		return vec;
-
-	}
 	
-	private double filterValue(double v) {
-		return Math.abs(v) <= THRESHOLD? 0 : v;
-	}
 	
-	private static double[] getRotationMatrixFromVector(Vector3D rotationVector) {
+	private static class MouseMoveAction implements Action {
 		
-		double[] rotationMatrix = new double[9];
-		
-        double q0;
-        double q1 = rotationVector.getX();
-        double q2 = rotationVector.getY();
-        double q3 = rotationVector.getZ();
-
-        q0 = 1 - q1*q1 - q2*q2 - q3*q3;
-        q0 = (q0 > 0) ? (double)Math.sqrt(q0) : 0;
-
-        double sq_q1 = 2 * q1 * q1;
-        double sq_q2 = 2 * q2 * q2;
-        double sq_q3 = 2 * q3 * q3;
-        double q1_q2 = 2 * q1 * q2;
-        double q3_q0 = 2 * q3 * q0;
-        double q1_q3 = 2 * q1 * q3;
-        double q2_q0 = 2 * q2 * q0;
-        double q2_q3 = 2 * q2 * q3;
-        double q1_q0 = 2 * q1 * q0;
-
-        rotationMatrix[0] = 1 - sq_q2 - sq_q3;
-        rotationMatrix[1] = q1_q2 - q3_q0;
-        rotationMatrix[2] = q1_q3 + q2_q0;
-
-        rotationMatrix[3] = q1_q2 + q3_q0;
-        rotationMatrix[4] = 1 - sq_q1 - sq_q3;
-        rotationMatrix[5] = q2_q3 - q1_q0;
-
-        rotationMatrix[6] = q1_q3 - q2_q0;
-        rotationMatrix[7] = q2_q3 + q1_q0;
-        rotationMatrix[8] = 1 - sq_q1 - sq_q2;
-        
-        return rotationMatrix;
-    }
-	
-	private class MouseMoveAction implements Action {
-		
-		Vector2D pos;
-		private static final double SLOWER_FACTOR = 0.1;
-		private MouseMoveAction(Vector2D pos) {
-			this.pos = pos;
+		private double[] rotMat;
+		private MouseMoveAction(double[] rotMat) {
+			this.rotMat = rotMat;
 		}
 		
 		@Override
 		public Object perform(Performer performer, Environment env) {
-//			Vector2D curPos = env.getMousePosition();
-//			Vector2D delta = slowDown(pos, curPos);
-//			if (!isVecTooSmall(delta)) {
-//				performer.mouseMove(curPos.add(delta));
-//			}
-			performer.mouseMove(pos);
+			ConfigurationService config = ConfigurationService.getInstance();
+			Vector3D pointer = env.getPointerReference();
+			Vector3D ray = toRay(pointer.clone().applyMatrix(this.rotMat), config);
+			this.restrictPointer(pointer, ray, config);
+			performer.mouseMove(ray.projectToPlane(config.getScreenPlane()));
 			return null;
 		}
 		
-		private Vector2D slowDown(Vector2D pos, Vector2D curPos) { 
-			Vector2D delta = Vector2D.minus(pos, curPos);
-			return delta.mutiply(SLOWER_FACTOR);
+		private void restrictPointer(Vector3D pointer, Vector3D ray, ConfigurationService config) {
+			Vector3D origin = config.getScreenPlane().getOrigin();
+			double leftX = origin.getX();
+			double rightX = leftX + ConfigurationService.getScreenWidth();
+			double topZ = origin.getZ();
+			double bottomZ = topZ - ConfigurationService.getScreenHeight();
 			
+			if (ray.getX() < leftX) {
+				ray.setX(leftX);
+			} else if (ray.getX() > rightX) {
+				ray.setX(rightX);
+			}
+			
+			if (ray.getZ() > topZ) {
+				ray.setZ(topZ);
+			} else if (ray.getZ() < bottomZ) {
+				ray.setZ(bottomZ);
+			}
+			
+			pointer.set(ray).normalized();
+		}
+
+		private Vector3D toRay(Vector3D pointer, ConfigurationService config) {
+			
+			double scale = config.getDistance() / pointer.getY();
+			pointer.mutiply(scale);
+			
+			return pointer;
 		}
 		
-		private boolean isVecTooSmall(Vector2D vec) {
-			return (int)vec.getX() == 0 && (int)vec.getY() == 0;
-				
-		}
 	}
-
+	
 }

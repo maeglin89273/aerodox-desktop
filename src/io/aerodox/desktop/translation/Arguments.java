@@ -8,31 +8,24 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 class Arguments {
-	private static final double EXPO = 10000000.0;
 	
 	private final Gson gson;
 	private final JsonObject jsonArgs;
+	
 	Arguments(JsonObject jsonArgs) {
 		 this.jsonArgs = jsonArgs;
 		this.gson  = new Gson();
 	}
 	
 	public Vector3D getAsVector3D(String argName) {
-		double[] vector = decompressVec(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
+		double[] vector = DecompressUtility.decompressVector(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
 		return new Vector3D(vector[0], vector[1], vector[2]);
 	}
 	
-	private double[] decompressVec(String[] compressedVec) {
-		double[] vector = new double[compressedVec.length];
-		for (int i = 0; i < vector.length; i++) {
-			vector[i] = Long.valueOf(compressedVec[i], 36) / EXPO;
-		}
-		
-		return vector;
-	}
+	
 	
 	public Vector2D getAsVector2D(String argName) {
-		double[] vector = decompressVec(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
+		double[] vector = DecompressUtility.decompressVector(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
 		return new Vector2D(vector[0], vector[1]);
 	}
 	
@@ -46,5 +39,18 @@ class Arguments {
 	
 	public JsonObject getRaw() {
 		return this.jsonArgs;
+	}
+	
+	private static class DecompressUtility {
+		private static final double EXPO = 10000000.0;
+		
+		public static double[] decompressVector(String[] compressedVec) {
+			double[] vector = new double[compressedVec.length];
+			for (int i = 0; i < vector.length; i++) {
+				vector[i] = Long.valueOf(compressedVec[i], 36) / EXPO;
+			}
+			
+			return vector;
+		}
 	}
 }

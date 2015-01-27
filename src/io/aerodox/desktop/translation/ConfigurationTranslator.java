@@ -15,7 +15,7 @@ import com.google.gson.JsonElement;
  * @author maeglin89273
  *
  */
-public class ConfigurationTranslator implements SubTranslator {
+public class ConfigurationTranslator implements ActionTranslator {
 	private static final Map<String, Configurator> CONFIG_MAP = new HashMap<String, Configurator>();
 	
 	static {

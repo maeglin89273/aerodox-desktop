@@ -11,7 +11,7 @@ import io.aerodox.desktop.imitation.Performer;
  * @author maeglin89273
  *
  */
-public class MouseButtonTranslator implements SubTranslator {
+public class MouseButtonTranslator implements ActionTranslator {
 
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translateImpl(io.aerodox.desktop.translation.SubTranslator.Arguments)

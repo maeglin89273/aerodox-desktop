@@ -13,7 +13,7 @@ import io.aerodox.desktop.prototype.DesktopPrototype;
  */
 public class DesktopLunacher {
 	public static void main(String[] args) {
-		new UDPLANConnection().start();
+		new TCPLANConnection().start();
 	}
 	
 	

@@ -3,6 +3,7 @@
  */
 package io.aerodox.desktop.service;
 
+import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Plane2D;
 import io.aerodox.desktop.math.Vector3D;
 
@@ -20,15 +21,21 @@ public class ConfigurationService {
 	private volatile int sensitivity;
 	private volatile Plane2D screenPlane;
 	private final int minDistance;
-	private static final int STRIDE = 110;
+	private double rotationThreshold;
 	
 	private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-	private static final int SENSITIVITY_DEFAULT = 2;
+	private static final int DISTANCE_PER_SENSITIVITY = (int)getScreenWidth() / 6;
+	private static final int SENSITIVITY_DEFAULT = 3;
+	private static final int SENSITIVITY_RANGE = 10;
+	
+	private static final double UPPER_BOUND_OF_MIN_ROTATION_DEGREE = 0.3;
+	private static final double DEGREE_PER_SENSITIVITY = -UPPER_BOUND_OF_MIN_ROTATION_DEGREE / SENSITIVITY_RANGE;
+	private static final double DEGREE_TO_RADIAN = Math.PI / 180;
 	
 	private ConfigurationService() {
 		this.sensitivity = SENSITIVITY_DEFAULT;
 		this.minDistance = (int)((getScreenWidth() + getScreenHeight()) / 4);
-		this.screenPlane = new Plane2D(new Vector3D((float)-getScreenWidth() / 2, this.getDistance(), (float)getScreenHeight() / 2),
+		this.screenPlane = new Plane2D(new Vector3D(-getScreenWidth() / 2, this.getDistance(), getScreenHeight() / 2),
 								 new Vector3D(1, 0, 0), new Vector3D(0, 0, -1));
 	}
 	
@@ -36,15 +43,19 @@ public class ConfigurationService {
 		return this.sensitivity;
 	}
 	
-	public void setSensitivity(int sensitivity) {
+	public synchronized void setSensitivity(int sensitivity) {
 		this.sensitivity = sensitivity;
 		this.screenPlane.getOrigin().setY(this.getDistance());
+		this.rotationThreshold = Math.sin((this.getSensitivity() * DEGREE_PER_SENSITIVITY + UPPER_BOUND_OF_MIN_ROTATION_DEGREE) * DEGREE_TO_RADIAN * 0.5);
 	}
 	
 	public float getDistance() {
-		return this.minDistance + getSensitivity() * STRIDE;
+		return this.minDistance + getSensitivity() * DISTANCE_PER_SENSITIVITY;
 	}
 	
+	public double getRotationThreshold() {
+		return this.rotationThreshold;
+	}
 	
 	public static float getScreenWidth() {
 		return (float)SCREEN_SIZE.getWidth();
@@ -54,7 +65,6 @@ public class ConfigurationService {
 		return (float)SCREEN_SIZE.getHeight();
 	}
 	
-	
 	public Plane2D getScreenPlane() {
 		return this.screenPlane;
 	}
@@ -63,8 +73,7 @@ public class ConfigurationService {
 		return SinglotenHolder.INSTANCE;
 	}
 	
-	
-	//The nested class solution when multi-threading
+	//The nested class solution of Singleton when multi-threading
 	private static class SinglotenHolder {
 		private static ConfigurationService INSTANCE = new ConfigurationService();
 	}

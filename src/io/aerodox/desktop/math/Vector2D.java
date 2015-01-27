@@ -13,6 +13,9 @@ public class Vector2D {
 	private double x;
 	private double y;
 	
+	public Vector2D() {
+		this(0, 0);
+	}
 	
 	public Vector2D(double x, double y) {
 	    this.x = x;
@@ -197,4 +200,9 @@ public class Vector2D {
     public Vector2D clone() {
     	return new Vector2D(this);
     }
+    
+    @Override
+	public String toString() {
+		return "x: " + this.x + " y: " + this.y;
+	}
 }

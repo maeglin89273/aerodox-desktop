@@ -9,6 +9,6 @@ package io.aerodox.desktop.translation;
  */
 
 // any subclasses should provide an zero-argument constructor
-interface SubTranslator {
+interface ActionTranslator {
 	public abstract Action translate(Arguments args);
 }

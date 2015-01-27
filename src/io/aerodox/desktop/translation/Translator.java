@@ -20,11 +20,11 @@ import com.google.gson.JsonObject;
  *
  */
 public abstract class Translator {
-	private Map<String, Class<? extends SubTranslator>> translatorMap;
+	private Map<String, Class<? extends ActionTranslator>> translatorMap;
 	private ExecutorService threadPool;
 	
 	public Translator() {
-		this.translatorMap = new HashMap<String, Class<? extends SubTranslator>>();
+		this.translatorMap = new HashMap<String, Class<? extends ActionTranslator>>();
 		this.threadPool = Executors.newCachedThreadPool();
 		this.register();
 	}
@@ -33,7 +33,7 @@ public abstract class Translator {
 		
 		String action = chunk.remove("act").getAsString();
 		try {
-			Class<? extends SubTranslator> translatorClass = translatorMap.get(action);
+			Class<? extends ActionTranslator> translatorClass = translatorMap.get(action);
 			if (translatorClass != null) {
 				this.asyncDispatch(translatorClass.newInstance(), chunk, channel);
 			}
@@ -42,7 +42,7 @@ public abstract class Translator {
 		}
 	}
 	
-	private void asyncDispatch(SubTranslator translator, JsonObject args, AsyncResponseChannel channel) {
+	private void asyncDispatch(ActionTranslator translator, JsonObject args, AsyncResponseChannel channel) {
 		this.threadPool.execute(new TranslationTask(translator, args, channel));
 	}
 	
@@ -50,7 +50,7 @@ public abstract class Translator {
 		this.threadPool.shutdown();
 	}
 	
-	protected void addTranslatorMapping(String name, Class<? extends SubTranslator> translatorClass) {
+	protected void addTranslatorMapping(String name, Class<? extends ActionTranslator> translatorClass) {
 		this.translatorMap.put(name, translatorClass);
 	}
 	
@@ -62,11 +62,11 @@ public abstract class Translator {
 	
 	private class TranslationTask implements Runnable {
 
-			private SubTranslator translator;
+			private ActionTranslator translator;
 			private JsonObject args;
 			private AsyncResponseChannel channel;
 			
-			private TranslationTask(SubTranslator translator, JsonObject args, AsyncResponseChannel channel) {
+			private TranslationTask(ActionTranslator translator, JsonObject args, AsyncResponseChannel channel) {
 				this.translator = translator;
 				this.args = args;
 				this.channel = channel;

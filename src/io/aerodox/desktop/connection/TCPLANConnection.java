@@ -31,7 +31,6 @@ public class TCPLANConnection extends LANConnection {
 				
 		try {
 			this.delegate = new ServerSocket(AerodoxConfig.PORT);
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 			close();

@@ -86,7 +86,6 @@ public class DesktopPrototype {
 		try {
 			readJson(accept.getInputStream());
 			
-			
 //			robot.mousePress(InputEvent.getMaskForButton(4));
 //			robot.mouseRelease(InputEvent.getMaskForButton(4));
 		} catch (IOException e) {
