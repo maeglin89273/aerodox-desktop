@@ -5,36 +5,46 @@ import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 class Arguments {
 	
-	private final Gson gson;
+	private static final Gson GSON = new Gson();
 	private final JsonObject jsonArgs;
 	
 	Arguments(JsonObject jsonArgs) {
 		 this.jsonArgs = jsonArgs;
-		this.gson  = new Gson();
 	}
 	
 	public Vector3D getAsVector3D(String argName) {
-		double[] vector = DecompressUtility.decompressVector(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
-		return new Vector3D(vector[0], vector[1], vector[2]);
+		return toVector3D(this.jsonArgs.get(argName));
 	}
 	
-	
-	
 	public Vector2D getAsVector2D(String argName) {
-		double[] vector = DecompressUtility.decompressVector(this.gson.fromJson(this.jsonArgs.get(argName), String[].class));
-		return new Vector2D(vector[0], vector[1]);
+		return toVector2D(this.jsonArgs.get(argName));
 	}
 	
 	public double[] getAsDoubleArray(String argName) {
-		return this.gson.fromJson(this.jsonArgs.get(argName), double[].class);
+		return toDoubleArray(this.jsonArgs.get(argName));
 	}
 	
 	public MouseButtonState getAsMouseButton(String argName) {
-		return this.gson.fromJson(this.jsonArgs.get(argName), MouseButtonState.class);
+		return GSON.fromJson(this.jsonArgs.get(argName), MouseButtonState.class);
+	}
+	
+	public static Vector3D toVector3D(JsonElement json) {
+		double[] vector = DecompressUtility.decompressVector(GSON.fromJson(json, String[].class));
+		return new Vector3D(vector[0], vector[1], vector[2]);
+	}
+	
+	public Vector2D toVector2D(JsonElement json) {
+		double[] vector = DecompressUtility.decompressVector(GSON.fromJson(json, String[].class));
+		return new Vector2D(vector[0], vector[1]);
+	}
+	
+	public double[] toDoubleArray(JsonElement element) {
+		return GSON.fromJson(element, double[].class);
 	}
 	
 	public JsonObject getRaw() {

@@ -3,15 +3,15 @@
  */
 package io.aerodox.desktop.translation;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-
-import io.aerodox.desktop.imitation.Environment;
 import io.aerodox.desktop.imitation.Performer;
+import io.aerodox.desktop.imitation.VirtualPointer;
 import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
-import io.aerodox.desktop.service.ConfigurationService;
+import io.aerodox.desktop.service.Configuration;
+import io.aerodox.desktop.service.ConfigurationGetter;
+import io.aerodox.desktop.test.DelayEstimator;
+import io.aerodox.desktop.test.DelayEstimator.Unit;
 
 
 /**
@@ -20,66 +20,37 @@ import io.aerodox.desktop.service.ConfigurationService;
  */
 public class MouseMoveTranslator implements ActionTranslator {
 	
+	
 	@Override
-	public Action translate(Arguments args) {
+	public Action translate(Arguments args, ConfigurationGetter config) {
 
-		Vector3D rotVec = args.getAsVector3D("gyro");
-		double threshold = ConfigurationService.getInstance().getRotationThreshold();
-		if (rotVec.getSquare() <= threshold * threshold) {
-			return null;
-		}
-		return new MouseMoveAction(MathUtility.getRotationMatrixFromVector(rotVec));
+		Vector3D rotVec = args.getAsVector3D("rot");
+		double[][] rotMat = MathUtility.getRotationMatrixFromVector(rotVec);
+
+		
+		return new MouseMoveAction(rotMat);
 	}
 	
 	
 	
 	private static class MouseMoveAction implements Action {
 		
-		private double[] rotMat;
-		private MouseMoveAction(double[] rotMat) {
+		private double[][] rotMat;
+		private static DelayEstimator est = new DelayEstimator(1, Unit.MS);
+		private MouseMoveAction(double[][] rotMat) {
 			this.rotMat = rotMat;
 		}
 		
 		@Override
-		public Object perform(Performer performer, Environment env) {
-			ConfigurationService config = ConfigurationService.getInstance();
-			Vector3D pointer = env.getPointerReference();
-			Vector3D ray = toRay(pointer.clone().applyMatrix(this.rotMat), config);
-			this.restrictPointer(pointer, ray, config);
-			performer.mouseMove(ray.projectToPlane(config.getScreenPlane()));
+		public Object perform(Performer performer, VirtualPointer pointer, Configuration config) {
+			pointer.setRotation(rotMat);
+			Vector2D pos = pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize());
+			
+			performer.mouseMove(pos);
 			return null;
 		}
-		
-		private void restrictPointer(Vector3D pointer, Vector3D ray, ConfigurationService config) {
-			Vector3D origin = config.getScreenPlane().getOrigin();
-			double leftX = origin.getX();
-			double rightX = leftX + ConfigurationService.getScreenWidth();
-			double topZ = origin.getZ();
-			double bottomZ = topZ - ConfigurationService.getScreenHeight();
-			
-			if (ray.getX() < leftX) {
-				ray.setX(leftX);
-			} else if (ray.getX() > rightX) {
-				ray.setX(rightX);
-			}
-			
-			if (ray.getZ() > topZ) {
-				ray.setZ(topZ);
-			} else if (ray.getZ() < bottomZ) {
-				ray.setZ(bottomZ);
-			}
-			
-			pointer.set(ray).normalized();
-		}
-
-		private Vector3D toRay(Vector3D pointer, ConfigurationService config) {
-			
-			double scale = config.getDistance() / pointer.getY();
-			pointer.mutiply(scale);
-			
-			return pointer;
-		}
-		
+	
 	}
+	
 	
 }

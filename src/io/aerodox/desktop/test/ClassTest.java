@@ -30,7 +30,8 @@ public class ClassTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		testCompress();
+		System.out.println(new Vector3D(1, 0, 0).crossProduct(new Vector3D(0, 0, -1)));
+//		testCompress();
 //		System.out.println(Long.toString(235312571257L, 36));
 	}
 	

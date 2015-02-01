@@ -92,7 +92,7 @@ public class Vector3D implements Serializable {
 	}
 
 	public double getMagnitude() {
-		return (double)Math.sqrt(getSquare());
+		return Math.sqrt(getSquare());
 	}
 	
 	public Vector3D setMagnitude(double mag) {
@@ -210,11 +210,11 @@ public class Vector3D implements Serializable {
 		return this;
 	}
 	
-	public Vector3D applyMatrix(double[] m) {
+	public Vector3D applyMatrix(double[][] m) {
 		double x = this.x, y = this.y, z = this.z;
-		this.x = m[0] * x + m[1] * y + m[2] * z;
-		this.y = m[3] * x + m[4] * y + m[5] * z;
-		this.z = m[6] * x + m[7] * y + m[8] * z;
+		this.x = m[0][0] * x + m[0][1] * y + m[0][2] * z;
+		this.y = m[1][0] * x + m[1][1] * y + m[1][2] * z;
+		this.z = m[2][0] * x + m[2][1] * y + m[2][2] * z;
 		
 		return this;
 	}
@@ -226,9 +226,9 @@ public class Vector3D implements Serializable {
 	
 	public Vector3D normalized() {
 		double magnitude = getMagnitude();
-		x /= magnitude;
-		y /= magnitude;
-		z /= magnitude;
+		this.x /= magnitude;
+		this.y /= magnitude;
+		this.z /= magnitude;
 		
 		return this;
 	}

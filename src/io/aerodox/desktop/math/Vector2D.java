@@ -177,6 +177,16 @@ public class Vector2D {
 		return this;
     }
     
+    public Vector2D negateX() {
+    	this.x = -this.x;
+    	return this;
+    }
+    
+    public Vector2D negateY() {
+    	this.y = -this.y;
+    	return this;
+    }
+    
     public static Vector2D reverse(Vector2D v) {
     	return new Vector2D(-v.getX(), -v.getY());
     }

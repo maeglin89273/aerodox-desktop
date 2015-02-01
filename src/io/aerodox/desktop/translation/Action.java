@@ -3,8 +3,9 @@
  */
 package io.aerodox.desktop.translation;
 
-import io.aerodox.desktop.imitation.Environment;
+import io.aerodox.desktop.imitation.VirtualPointer;
 import io.aerodox.desktop.imitation.Performer;
+import io.aerodox.desktop.service.Configuration;
 
 /**
  * @author maeglin89273
@@ -12,5 +13,5 @@ import io.aerodox.desktop.imitation.Performer;
  */
 public interface Action {
 	
-	public abstract Object perform(Performer performer, Environment env);
+	public abstract Object perform(Performer performer, VirtualPointer pointer, Configuration config);
 }

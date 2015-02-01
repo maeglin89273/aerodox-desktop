@@ -38,7 +38,11 @@ public class Plane2D {
 	public Vector3D getE2() {
 		return e2;
 	}
-
+	
+	public Vector3D getNormal() {
+		return getE1().crossProduct(getE2());
+	}
+	
 	public void setE2(Vector3D e2) {
 		this.e2 = e2;
 	}

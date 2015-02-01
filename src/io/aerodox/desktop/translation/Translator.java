@@ -75,9 +75,10 @@ public abstract class Translator {
 			
 			@Override
 			public void run() {
-				Action action = translator.translate(new Arguments(args));
+				PerformingService service = PerformingService.getInstance();
+				Action action = translator.translate(new Arguments(args), service.getConfigGetter());
 				if (action != null) {
-					PerformingService.getInstance().queueAction(action, channel);
+					service.queueAction(action, channel);
 				}
 			}
 			

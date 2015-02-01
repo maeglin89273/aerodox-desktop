@@ -54,10 +54,10 @@ public class UDPLANConnection extends LANConnection {
 		DatagramPacket actionPacket;
 		try (AsyncResponseChannel channel = new DatagramAsyncResponseChannel(this.delegate)) {
 			for (;!delegate.isClosed();) {
-				delay.start();
+//				delay.start();
 				actionPacket = new DatagramPacket(this.buffer, this.buffer.length);
 				delegate.receive(actionPacket);
-				delay.estimate();
+//				delay.estimate();
 				handlePacket(actionPacket, channel);
 				
 			}
