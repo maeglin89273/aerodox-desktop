@@ -7,7 +7,7 @@ package io.aerodox.desktop.math;
  */
 public class LowPassMatrixFilter {
 
-    public static final float ALPHA_DEFAULT = 0.693f;
+    public static final float ALPHA_DEFAULT = 0.685f;
     
     private double[][] lowPassedVals;
   
