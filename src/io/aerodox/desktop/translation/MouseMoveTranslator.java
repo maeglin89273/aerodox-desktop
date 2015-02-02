@@ -36,7 +36,7 @@ public class MouseMoveTranslator implements ActionTranslator {
 	private static class MouseMoveAction implements Action {
 		
 		private double[][] rotMat;
-		private static DelayEstimator est = new DelayEstimator(1, Unit.MS);
+		private static DelayEstimator est = new DelayEstimator(100, Unit.US);
 		private MouseMoveAction(double[][] rotMat) {
 			this.rotMat = rotMat;
 		}

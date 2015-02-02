@@ -27,15 +27,15 @@ public class LowPassMatrixFilter {
         reset(alpha);
     }
 
-    public double[][] filter(long timestamp, double[][] newInput) {
+    public double[][] filter(double[][] newInput) {
 
-        this.filterImpl(timestamp, newInput);
-        updateStable(timestamp);
+        this.filterImpl(newInput);
+        updateStable();
         
         return lowPassedVals;
     }
     
-    private void updateStable(long timestamp) {
+    private void updateStable() {
         if (!this.isStable()) {
         	this.warmUpCount++;
             if (this.warmUpCount > this.stableCount) {
@@ -44,7 +44,7 @@ public class LowPassMatrixFilter {
         }
     }
 
-    private void filterImpl(long timestamp, double[][] newInput) {
+    private void filterImpl(double[][] newInput) {
         for (int i = 0; i < lowPassedVals.length; i++) {
         	for (int j = 0; j < lowPassedVals[i].length; j++) {
         		lowPassedVals[i][j] = alpha * this.lowPassedVals[i][j] + oneMinusAlpha * newInput[i][j];

@@ -6,6 +6,7 @@ package io.aerodox.desktop.connection;
 import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.translation.Translator;
+import io.aerodox.desktop.translation.Translator.Type;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -33,13 +34,13 @@ public class UDPLANConnection extends LANConnection {
 	
 	public UDPLANConnection() {
 		try {
-			this.delegate = new DatagramSocket(AerodoxConfig.PORT);
+			this.delegate = new DatagramSocket(AerodoxConfig.UDP_PORT);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
 		
 		this.buffer = new byte[BUFFER_SIZE];
-		this.translator = Translator.newTranslator();
+		this.translator = Translator.newTranslator(Type.MOVEMENT);
 		this.parser = new JsonParser();
 		this.delay = new DelayEstimator(200, DelayEstimator.Unit.MS);
 	}

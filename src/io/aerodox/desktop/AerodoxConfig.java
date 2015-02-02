@@ -8,5 +8,7 @@ package io.aerodox.desktop;
  *
  */
 public interface AerodoxConfig {
-	public static int PORT = 1810;
+	public static int UDP_PORT = 1810;
+	public static int TCP_PORT = 8101;
+	public static boolean DEBUG = false;
 }

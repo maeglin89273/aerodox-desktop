@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
  *
  */
 public abstract class Translator {
+	public enum Type {MOVEMENT, COMMAND};
+	
 	private Map<String, Class<? extends ActionTranslator>> translatorMap;
 	private ExecutorService threadPool;
 	
@@ -56,9 +58,17 @@ public abstract class Translator {
 	
 	protected abstract void register();
 	
-	public static Translator newTranslator() {
-		return new TranslatorImpl();
+	public static Translator newTranslator(Type type) {
+		switch (type) {
+			case MOVEMENT:
+				return new MovementTranslatorImpl();
+			case COMMAND:
+				new CommandTranslatorImpl();
+		}
+		
+		return null;
 	}
+	
 	
 	private class TranslationTask implements Runnable {
 

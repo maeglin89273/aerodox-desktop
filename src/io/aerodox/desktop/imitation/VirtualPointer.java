@@ -35,6 +35,7 @@ public class VirtualPointer {
 		this.panning = null;
 		this.rotDelta = null;
 		this.filter = new LowPassMatrixFilter();
+		
 		this.position = new Vector3D();
 		this.velocity = new Vector3D();
 	}
@@ -52,25 +53,13 @@ public class VirtualPointer {
 	
 	private double[][] computeRotateDelta(double[][] rotMatrix) {
 		double[][] delta = MathUtility.multipyMatrices(MathUtility.transposeMatrix(preRot), rotMatrix);
-		delta = filter.filter(System.nanoTime(), delta);
+		delta = filter.filter(delta);
 		if (filter.isStable()) {
 			return delta;
 		}
 		return null;
 	}
 	
-/*	private static double START = System.nanoTime() / 1000000000.0;
-	private static final double R2D = 180 / Math.PI;
-	private void printAngles(double[][] angle) {
-		if (!filter.isStable()) {
-			return;
-		}
-		Vector3D angle3D = new Vector3D(1, 0, 0).applyMatrix(angle);
-		System.out.printf("%.3f, %.3f, %.3f\n", System.nanoTime() / 1000000000.0 - START,
-											    Math.atan2(angle3D.getY(), angle3D.getX()) * R2D,
-											    Math.atan2(angle3D.getZ(), angle3D.getY()) * R2D);
-	}
-*/	
 	
 	public void pan(Vector3D vec) {
 		this.panning = vec;

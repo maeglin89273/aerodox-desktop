@@ -34,7 +34,7 @@ public class TCPLANConnection extends LANConnection {
 		this.executor = Executors.newCachedThreadPool();
 			
 		try {
-			this.delegate = new ServerSocket(AerodoxConfig.PORT);
+			this.delegate = new ServerSocket(AerodoxConfig.TCP_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 			close();
