@@ -1,12 +1,14 @@
 /**
  * 
  */
-package io.aerodox.desktop.imitation;
+package io.aerodox.desktop.imitation.motiontools;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
 
-import io.aerodox.desktop.math.LowPassMatrixFilter;
+import io.aerodox.desktop.imitation.IntXY;
+import io.aerodox.desktop.math.LowPassFilter;
+import io.aerodox.desktop.math.LowPassFilter.ValueIterator;
 import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Plane2D;
 import io.aerodox.desktop.math.Vector2D;
@@ -24,7 +26,7 @@ public class VirtualPointer {
 	
 	private double[][] preRot;
 	private double[][] rotDelta;
-	private LowPassMatrixFilter filter;
+	private final LowPassFilter<double[][]> filter;
 	
 	private Vector3D velocity;
 	private Vector3D lastRayPoint;
@@ -34,7 +36,7 @@ public class VirtualPointer {
 	public VirtualPointer() {
 		this.panning = null;
 		this.rotDelta = null;
-		this.filter = new LowPassMatrixFilter();
+		this.filter = new LowPassFilter<double[][]>(new MatrixIterator(new double[3][3]));
 		
 		this.position = new Vector3D();
 		this.velocity = new Vector3D();
@@ -53,7 +55,7 @@ public class VirtualPointer {
 	
 	private double[][] computeRotateDelta(double[][] rotMatrix) {
 		double[][] delta = MathUtility.multipyMatrices(MathUtility.transposeMatrix(preRot), rotMatrix);
-		delta = filter.filter(delta);
+		delta = filter.filter(new MatrixIterator(delta));
 		if (filter.isStable()) {
 			return delta;
 		}
@@ -66,7 +68,7 @@ public class VirtualPointer {
 	}
 	
 	
-	public Vector2D beamToScreen(Plane2D screenPlane, Vector2D bounds) {
+	public IntXY beamToScreen(Plane2D screenPlane, Vector2D bounds) {
 		Vector3D currentRay = this.getCurrentRay(screenPlane);
 		
 		rotateRay(currentRay, screenPlane);
@@ -75,7 +77,7 @@ public class VirtualPointer {
 		Vector2D pointerOnScreen = currentRay.projectToPlane(screenPlane);
 		
 		updateVelocity(currentRay);
-		return pointerOnScreen;
+		return new IntXY(pointerOnScreen.getX(), pointerOnScreen.getY());
 	}
 	
 	private void rotateRay(Vector3D ray, Plane2D screenPlane) {
@@ -134,4 +136,43 @@ public class VirtualPointer {
 		return origin.add(translateX).add(translateY);
 	}
 	
+	private class MatrixIterator extends ValueIterator<double[][]> {
+		private int i, j;
+		
+		public MatrixIterator(double[][] matrix) {
+			super(matrix);
+		}
+		
+		@Override
+		public void restart() {
+			this.i = this.j = 0;
+			
+		}
+
+		@Override
+		public boolean hasNext() {
+			return this.i < this.values.length;
+		}
+
+		@Override
+		public void next() {
+			this.j++;
+			if (this.j >= this.values[i].length) {
+				this.j = 0;
+				this.i++;
+			}
+		}
+
+		@Override
+		public void set(double value) {
+			this.values[i][j] = value;
+		}
+
+		@Override
+		public double get() {
+			return this.values[i][j];
+		}
+
+		
+	}
 }

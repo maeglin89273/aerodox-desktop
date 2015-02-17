@@ -11,6 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.zip.Deflater;
 
 import com.google.gson.Gson;
@@ -30,7 +32,30 @@ public class ClassTest {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		System.out.println(new Vector3D(1, 0, 0).crossProduct(new Vector3D(0, 0, -1)));
+		
+		
+		final Timer timer = new Timer();
+		
+		
+		TimerTask task = new TimerTask() {
+			private int count = 3;
+			@Override
+			public void run() {
+				long cur = System.currentTimeMillis();
+				long le = this.scheduledExecutionTime();
+				System.out.println("diff: " + (cur - le)  + ", now: " + cur + ", le: " + le);
+				
+				count--;
+				if (count < 0) {
+					this.cancel();
+				}
+			}
+			
+		};
+		
+		timer.scheduleAtFixedRate(task, 500, 500);
+		
+//		System.out.println(new Vector3D(1, 0, 0).crossProduct(new Vector3D(0, 0, -1)));
 //		testCompress();
 //		System.out.println(Long.toString(235312571257L, 36));
 	}

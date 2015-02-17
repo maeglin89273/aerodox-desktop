@@ -3,8 +3,9 @@
  */
 package io.aerodox.desktop.translation;
 
-import io.aerodox.desktop.imitation.VirtualPointer;
 import io.aerodox.desktop.imitation.Performer;
+import io.aerodox.desktop.imitation.motiontools.MotionTools;
+import io.aerodox.desktop.imitation.motiontools.VirtualPointer;
 import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
 import io.aerodox.desktop.service.Configuration;
@@ -35,7 +36,8 @@ public class TouchTranslator implements ActionTranslator {
 		}
 		
 		@Override
-		public Object perform(Performer performer, VirtualPointer pointer, Configuration config) {
+		public Object perform(Performer performer, MotionTools tools, Configuration config) {
+			VirtualPointer pointer = tools.getVirtualPointer();
 			pointer.retrackRotation();
 			pointer.pan(mov);
 			performer.mouseMove(pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize()));

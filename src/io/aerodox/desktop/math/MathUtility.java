@@ -10,7 +10,8 @@ package io.aerodox.desktop.math;
 public class MathUtility {
 	
 	public static final double EPSILON = 0.0000001;
-	
+	private static final float SLOWDOWN_TIME_CONST = 3.2f; 
+	private static final float DECAY_CURVE_COEF = 2.7f;
 	private MathUtility(){
 	}
 	
@@ -80,6 +81,13 @@ public class MathUtility {
 		}
 		
 		return result;
+	}
+	
+	public static double slowdownFormula(double timeInSec, double v0) {
+		double ratio = timeInSec / SLOWDOWN_TIME_CONST;
+		double vt =  Math.signum(v0) * -1 * Math.pow(ratio, DECAY_CURVE_COEF) + v0;
+		
+		return vt * v0 > 0? vt: 0; 
 	}
 	
 }

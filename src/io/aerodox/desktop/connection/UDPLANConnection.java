@@ -40,7 +40,7 @@ public class UDPLANConnection extends LANConnection {
 		}
 		
 		this.buffer = new byte[BUFFER_SIZE];
-		this.translator = Translator.newTranslator(Type.MOVEMENT);
+		this.translator = Translator.newTranslator(Type.MOTION);
 		this.parser = new JsonParser();
 		this.delay = new DelayEstimator(200, DelayEstimator.Unit.MS);
 	}

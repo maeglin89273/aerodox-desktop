@@ -4,7 +4,9 @@
 package io.aerodox.desktop.translation;
 
 import io.aerodox.desktop.imitation.Performer;
-import io.aerodox.desktop.imitation.VirtualPointer;
+import io.aerodox.desktop.imitation.IntXY;
+import io.aerodox.desktop.imitation.motiontools.MotionTools;
+import io.aerodox.desktop.imitation.motiontools.VirtualPointer;
 import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
@@ -42,9 +44,10 @@ public class MouseMoveTranslator implements ActionTranslator {
 		}
 		
 		@Override
-		public Object perform(Performer performer, VirtualPointer pointer, Configuration config) {
+		public Object perform(Performer performer, MotionTools tools, Configuration config) {
+			VirtualPointer pointer = tools.getVirtualPointer();
 			pointer.setRotation(rotMat);
-			Vector2D pos = pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize());
+			IntXY pos = pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize());
 			
 			performer.mouseMove(pos);
 			return null;

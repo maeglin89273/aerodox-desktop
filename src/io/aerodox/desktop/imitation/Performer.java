@@ -12,6 +12,11 @@ import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+
+import sun.awt.X11.Screen;
+
 
 /**
  * @author maeglin89273
@@ -43,12 +48,10 @@ public class Performer {
 		}
 	}
 	
-	public synchronized boolean mouseMove(Vector2D pos) {
+	public synchronized boolean mouseMove(IntXY pos) {
 		
-		int x = round(pos.getX());
-		int y = round(pos.getY());
 		
-		this.delegate.mouseMove(x, y);
+		this.delegate.mouseMove(pos.getX(), pos.getY());
 		
 		return false;
 //		return this.isOutOfMonitor(x, y);
@@ -63,14 +66,27 @@ public class Performer {
 		return false;
 	}
 	
-	private int round(double v) {
-		return (int)Math.round(v);
+	
+	
+	public synchronized void mouseWheel(IntXY delta) {
+
+		if (delta.getX() != 0) {
+			this.handleMouseWheelHorizontal(delta.getX());
+		}
+		
+		if (delta.getY() != 0) {
+			this.delegate.mouseWheel(delta.getY());
+		}
+		
 	}
 	
-	public synchronized void mouseWheel(int dx, int dy) {
-		this.delegate.mouseWheel(dy);
-		this.delegate.keyPress(InputEvent.SHIFT_DOWN_MASK);
-		this.delegate.mouseWheel(dx);
-		this.delegate.keyRelease(InputEvent.SHIFT_DOWN_MASK);
+	private void handleMouseWheelHorizontal(int delta) {
+		int btnMask = InputEvent.getMaskForButton(delta < 0? 4: 5), iterCount = Math.abs(delta);
+		for (int i = 0; i < iterCount; i++) {
+			this.delegate.mousePress(btnMask);
+			this.delegate.mouseRelease(btnMask);
+			
+		}
 	}
+	
 }

@@ -7,8 +7,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
-import io.aerodox.desktop.imitation.VirtualPointer;
 import io.aerodox.desktop.imitation.Performer;
+import io.aerodox.desktop.imitation.motiontools.MotionTools;
+import io.aerodox.desktop.imitation.motiontools.VirtualPointer;
 import io.aerodox.desktop.translation.Action;
 
 /**
@@ -19,14 +20,14 @@ public class PerformingService {
 	private Configuration config;
 	private ConfigurationGetter configGetter;
 	private Performer performer;
-	private VirtualPointer pointer;
+	private MotionTools tools;
 	private ExecutorService executor;
 	
 	private PerformingService() {
 		this.config = new Configuration();
 		this.configGetter = new ConfigurationGetter(this.config);
 		this.performer = new Performer();
-		this.pointer = new VirtualPointer();
+		this.tools = new MotionTools();
 		this.executor = Executors.newSingleThreadExecutor();
 	}
 	
@@ -43,7 +44,7 @@ public class PerformingService {
 
 			@Override
 			public void run() {
-				Object response = action.perform(performer, pointer, config);
+				Object response = action.perform(performer, tools, config);
 				if (response != null) {
 					channel.respond(response);
 				}
@@ -57,6 +58,6 @@ public class PerformingService {
 	}
 	
 	private static class SinglotenHolder {
-		private static PerformingService INSTANCE = new PerformingService();
+		private static final PerformingService INSTANCE = new PerformingService();
 	}
 }
