@@ -35,7 +35,7 @@ public class Configuration {
 	}
 	
 	private static final int MIN_DISTANCE = (int)((getScreenWidth() + getScreenHeight()) / 4);
-	private static final int DISTANCE_PER_SENSITIVITY = (int)getScreenWidth() / 5;
+	private static final int DISTANCE_PER_SENSITIVITY = (int)(getScreenWidth() / 4.5f);
 	
 	private static final double UPPER_BOUND_OF_MOVE_THRESHOLD = 3;
 	private static final double MOVE_THRESHOLD_PER_SENSITIVITY = -UPPER_BOUND_OF_MOVE_THRESHOLD / SENSITIVITY_RANGE;

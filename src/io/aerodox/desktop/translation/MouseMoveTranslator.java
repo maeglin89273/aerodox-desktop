@@ -3,17 +3,17 @@
  */
 package io.aerodox.desktop.translation;
 
-import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.IntXY;
+import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.imitation.motiontools.VirtualPointer;
 import io.aerodox.desktop.math.MathUtility;
-import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.ConfigurationGetter;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.test.DelayEstimator.Unit;
+import io.aerodox.desktop.test.MotionTracker;
 
 
 /**
@@ -21,12 +21,25 @@ import io.aerodox.desktop.test.DelayEstimator.Unit;
  *
  */
 public class MouseMoveTranslator implements ActionTranslator {
-	
-	
+	private static final double THRESHOLD = MathUtility.EPSILON * 12000;
+	static MotionTracker tracker = new MotionTracker(6);
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
 
-		Vector3D rotVec = args.getAsVector3D("rot");
+		Vector3D rotVec = args.getAsVector3D("gyro");
+		
+        double omegaMagnitude = rotVec.getMagnitude();
+        if (omegaMagnitude < THRESHOLD) {
+        	rotVec.set(0, 0, 0);
+        } else {
+        	rotVec.divided(omegaMagnitude);
+        }
+        
+        double thetaOverTwo = omegaMagnitude / 2.0f;
+        double sinThetaOverTwo = Math.sin(thetaOverTwo);
+        
+        rotVec.mutiply(sinThetaOverTwo);
+        
 		double[][] rotMat = MathUtility.getRotationMatrixFromVector(rotVec);
 
 		
@@ -36,9 +49,8 @@ public class MouseMoveTranslator implements ActionTranslator {
 	
 	
 	private static class MouseMoveAction implements Action {
-		
 		private double[][] rotMat;
-		private static DelayEstimator est = new DelayEstimator(100, Unit.US);
+		
 		private MouseMoveAction(double[][] rotMat) {
 			this.rotMat = rotMat;
 		}

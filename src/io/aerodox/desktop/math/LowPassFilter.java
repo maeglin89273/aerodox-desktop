@@ -7,7 +7,7 @@ package io.aerodox.desktop.math;
  */
 public class LowPassFilter<T> {
 
-    public static final float ALPHA_DEFAULT = 0.685f;
+    public static final float ALPHA_DEFAULT = 0.682f;
     
     private float alpha;
     private float oneMinusAlpha;
@@ -44,7 +44,7 @@ public class LowPassFilter<T> {
         }
     }
 
-    private void filterImpl(ValueIterator newInput) {
+    private void filterImpl(ValueIterator<T> newInput) {
     	for (this.lowPassedItor.restart(); this.lowPassedItor.hasNext(); this.lowPassedItor.next(), newInput.next()) {
     		this.lowPassedItor.set(alpha * this.lowPassedItor.get() + oneMinusAlpha * newInput.get());
     	}

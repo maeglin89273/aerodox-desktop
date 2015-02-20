@@ -9,7 +9,6 @@ import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.ConfigurationGetter;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,6 @@ public class ConfigurationTranslator implements ActionTranslator {
 				config.setSensitivity(value.getAsInt());
 			}
 		});
-		
-		
 	}
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translateToAction(io.aerodox.desktop.translation.SubTranslator.Arguments)
@@ -67,12 +64,11 @@ public class ConfigurationTranslator implements ActionTranslator {
 		}
 
 		@Override
-		public Object perform(Performer performer, MotionTools tools,	Configuration config) {
+		public Object perform(Performer performer, MotionTools tools, Configuration config) {
 			for (Pair configPair: this.configPairs) {
 				configPair.configurator.configurate(config, configPair.value);
 			}
 			return null;
 		}
-		
 	}
 }

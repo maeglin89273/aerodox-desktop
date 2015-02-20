@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
  *
  */
 public abstract class Translator {
-	public enum Type {MOTION, COMMAND};
+	public enum Type {FULL, MOTION, COMMAND};
 	
 	private Map<String, Class<? extends ActionTranslator>> translatorMap;
 	private ExecutorService threadPool;
@@ -60,10 +60,12 @@ public abstract class Translator {
 	
 	public static Translator newTranslator(Type type) {
 		switch (type) {
+			case FULL:
+				return new FullTranslatorImpl();
 			case MOTION:
 				return new MotionTranslatorImpl();
 			case COMMAND:
-				new CommandTranslatorImpl();
+				return new CommandTranslatorImpl();
 		}
 		
 		return null;

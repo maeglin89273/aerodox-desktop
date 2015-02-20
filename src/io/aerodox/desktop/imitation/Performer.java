@@ -3,19 +3,10 @@
  */
 package io.aerodox.desktop.imitation;
 
-import io.aerodox.desktop.math.Vector2D;
-
 import java.awt.AWTException;
 import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
-import sun.awt.X11.Screen;
 
 
 /**
@@ -49,8 +40,6 @@ public class Performer {
 	}
 	
 	public synchronized boolean mouseMove(IntXY pos) {
-		
-		
 		this.delegate.mouseMove(pos.getX(), pos.getY());
 		
 		return false;

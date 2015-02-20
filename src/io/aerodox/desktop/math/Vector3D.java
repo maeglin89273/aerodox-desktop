@@ -3,13 +3,13 @@
  */
 package io.aerodox.desktop.math;
 
-import java.io.Serializable;
-
 /**
  * @author maeglin89273
  *
  */
-public class Vector3D implements Serializable {
+public class Vector3D {
+	private static double EPSILON = MathUtility.EPSILON * 12000;
+	
 	private double x;
 	private double y;
 	private double z;
@@ -68,7 +68,7 @@ public class Vector3D implements Serializable {
 	}
 
 	public static Vector3D add(Vector3D a, Vector3D b) {
-		return new Vector3D(a.getX() + b.getX(), a.getY() + b.getY(), a.getZ() + b.getZ());
+		return a.clone().add(b);
 	}
 
 	public Vector3D addMagnitude(double mag) {
@@ -123,7 +123,7 @@ public class Vector3D implements Serializable {
 	}
 
 	public static Vector3D divided(Vector3D v, double divisor) {
-		return new Vector3D(v.getX() / divisor, v.getY() / divisor, v.getZ() / divisor);
+		return v.clone().divided(divisor);
 	}
 
 	public Vector3D mutiply(double multiplicand) {
@@ -135,7 +135,7 @@ public class Vector3D implements Serializable {
 	}
 
 	public static Vector3D mutiply(Vector3D v, double multiplicand) {
-		return new Vector3D(v.getX() * multiplicand, v.getY() * multiplicand, v.getZ() * multiplicand);
+		return v.clone().mutiply(multiplicand);
 	}
 
 	public Vector3D minus(Vector3D v) {
@@ -151,7 +151,7 @@ public class Vector3D implements Serializable {
 	}
 	
 	public static Vector3D minus(Vector3D a, Vector3D b) {
-		return new Vector3D(a.getX() - b.getX(), a.getY() - b.getY(), a.getZ() - b.getZ());
+		return a.clone().minus(b);
 	}
 	
 	public Vector3D minusMagnitude(double mag) {
@@ -182,7 +182,7 @@ public class Vector3D implements Serializable {
 	}
 
 	public static Vector3D reverse(Vector3D v) {
-		return new Vector3D(-v.getX(), -v.getY(), v.getZ());
+		return v.clone().reverse();
 	}
 	
 	public Vector3D round() {
@@ -226,16 +226,19 @@ public class Vector3D implements Serializable {
 	
 	public Vector3D normalized() {
 		double magnitude = getMagnitude();
-		this.x /= magnitude;
-		this.y /= magnitude;
-		this.z /= magnitude;
+		if (magnitude > EPSILON) {
+			this.x /= magnitude;
+			this.y /= magnitude;
+			this.z /= magnitude;
+		} else {
+			this.x = this.y = this.z = 0;
+		}
 		
 		return this;
 	}
 	
 	public static Vector3D normalized(Vector3D v) {
-		double magnitude = v.getMagnitude();
-		return new Vector3D(v.getX() / magnitude, v.getY() / magnitude, v.getZ() / magnitude);
+		return v.clone().normalized();
 	}
 	
 	@Override

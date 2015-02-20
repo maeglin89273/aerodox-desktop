@@ -12,6 +12,5 @@ import io.aerodox.desktop.service.Configuration;
  *
  */
 public interface Action {
-	
 	public abstract Object perform(Performer performer, MotionTools tools, Configuration config);
 }

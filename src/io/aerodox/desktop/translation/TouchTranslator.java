@@ -38,7 +38,6 @@ public class TouchTranslator implements ActionTranslator {
 		@Override
 		public Object perform(Performer performer, MotionTools tools, Configuration config) {
 			VirtualPointer pointer = tools.getVirtualPointer();
-			pointer.retrackRotation();
 			pointer.pan(mov);
 			performer.mouseMove(pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize()));
 			return null;

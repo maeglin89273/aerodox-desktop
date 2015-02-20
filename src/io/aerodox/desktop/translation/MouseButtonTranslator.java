@@ -32,7 +32,6 @@ public class MouseButtonTranslator implements ActionTranslator {
 		}
 		@Override
 		public Object perform(Performer performer, MotionTools tools, Configuration config) {
-			tools.getVirtualPointer().retrackRotation();
 			performer.mouseButton(this.btnState);
 			return null;
 		}

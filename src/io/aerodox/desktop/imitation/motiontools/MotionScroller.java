@@ -3,30 +3,28 @@
  */
 package io.aerodox.desktop.imitation.motiontools;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import io.aerodox.desktop.AerodoxConfig;
-import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.IntXY;
+import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.math.LowPassFilter;
 import io.aerodox.desktop.math.LowPassFilter.ValueIterator;
 import io.aerodox.desktop.math.MathUtility;
-import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.PerformingService;
-import io.aerodox.desktop.test.MotionTracker;
 import io.aerodox.desktop.translation.Action;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author maeglin89273
  *
  */
 public class MotionScroller {
-	private static final float RADIUS = 5.6f;
+	private static final float RADIUS = 8f;
 	private static final float DIAMETER = 2 * RADIUS;
-	private static final float RELEASE_ANGULAR_VOL = 0.0575f;
+	private static final float RELEASE_ANGULAR_VOL = 0.0585f;
 	private static final float RELEASE_ANGULAR_VOL_SQUARE = RELEASE_ANGULAR_VOL * RELEASE_ANGULAR_VOL;
 	
 	private final IntXY noVol = new IntXY(); 
@@ -36,7 +34,7 @@ public class MotionScroller {
 	
 	private Vector3D distance;
 	private int ix, iy, iz;
-	private long timestamp;
+
 	
 //	private static final MotionTracker TRACKER = new MotionTracker(6);
 	
@@ -47,12 +45,10 @@ public class MotionScroller {
 		 this.distance = new Vector3D();
 		 this.ix = this.iy = this.iz = 0;
 		 
-		 this.resetTimestamp();
 	}
 	
 	public IntXY swipe(Vector3D angularVol) {
-//		TRACKER.track(angularVol);
-		adjustVolUnit(angularVol);
+
 		if (this.inertiaProducer.isRunning()) {
 			this.inertiaProducer.tryAccelerateV0(angularVol);
 			return this.noVol;
@@ -96,22 +92,6 @@ public class MotionScroller {
 		return scrollVol;
 	}
 
-	private void adjustVolUnit(Vector3D angularVol) {
-		if (this.timestamp <= 0) {
-			this.timestamp = System.nanoTime();
-		}
-		
-		long preTime = this.timestamp;
-		this.timestamp = System.nanoTime();
-//		double interval = (this.timestamp - preTime) / 1000000000.0;
-		double interval = AerodoxConfig.MOTION_UPDATE_PERIOD_IN_MS / 1000.0;
-		angularVol.mutiply(interval);
-	}
-
-	private void resetTimestamp() {
-		this.timestamp = -1;
-	}
-	
 	private class VectorIterator extends ValueIterator<double[]> {
 		private int i;
 		

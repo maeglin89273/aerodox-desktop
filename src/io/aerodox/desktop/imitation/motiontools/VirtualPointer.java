@@ -13,6 +13,7 @@ import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Plane2D;
 import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
+import io.aerodox.desktop.test.MotionTracker;
 
 /**
  * @author maeglin89273
@@ -24,14 +25,12 @@ public class VirtualPointer {
 	private Vector3D position;
 	private Vector3D panning;
 	
-	private double[][] preRot;
 	private double[][] rotDelta;
 	private final LowPassFilter<double[][]> filter;
 	
 	private Vector3D velocity;
 	private Vector3D lastRayPoint;
 	
-//	private Vector3D testVec = new Vector3D(0, 1, 0);
 	
 	public VirtualPointer() {
 		this.panning = null;
@@ -41,27 +40,18 @@ public class VirtualPointer {
 		this.position = new Vector3D();
 		this.velocity = new Vector3D();
 	}
-	
-	public void retrackRotation() {
-		this.preRot = null;
-	}
+
 	public void setRotation(double[][] rotMatrix) {
-		if (this.preRot != null) {
-			this.rotDelta = this.computeRotateDelta(rotMatrix);
-		}
-		
-		this.preRot = rotMatrix;
+		this.rotDelta = filterRotMatrix(rotMatrix);
 	}
-	
-	private double[][] computeRotateDelta(double[][] rotMatrix) {
-		double[][] delta = MathUtility.multipyMatrices(MathUtility.transposeMatrix(preRot), rotMatrix);
-		delta = filter.filter(new MatrixIterator(delta));
+
+	private double[][] filterRotMatrix(double[][] rotMatrix) {
+		rotMatrix = filter.filter(new MatrixIterator(rotMatrix));
 		if (filter.isStable()) {
-			return delta;
+			return rotMatrix;
 		}
 		return null;
 	}
-	
 	
 	public void pan(Vector3D vec) {
 		this.panning = vec;
@@ -175,4 +165,5 @@ public class VirtualPointer {
 
 		
 	}
+
 }
