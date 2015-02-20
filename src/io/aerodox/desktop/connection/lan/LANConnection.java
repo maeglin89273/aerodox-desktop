@@ -1,7 +1,9 @@
 /**
  * 
  */
-package io.aerodox.desktop.connection;
+package io.aerodox.desktop.connection.lan;
+
+import io.aerodox.desktop.connection.Connection;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -15,9 +17,39 @@ import java.util.List;
  * @author maeglin89273
  *
  */
-public abstract class LANConnection implements Connection {
+public class LANConnection implements Connection {
+	
+	private Connection tcp;
+	private Connection udp;
+	private Thread subConnectionThread;
+	
+	public LANConnection() {
+		this.tcp = new TCPLANConnection();
+		this.udp = new UDPLANConnection();
+		this.subConnectionThread = new Thread(new Runnable() {
 
-	protected void showIPs() {
+			@Override
+			public void run() {
+				udp.start();
+			}
+			
+		});
+	}
+
+	@Override
+	public void start() {
+		this.showIPs();
+		this.subConnectionThread.start();
+		this.tcp.start();
+	}
+
+	@Override
+	public void close() {
+		this.udp.close();
+		this.tcp.close();
+	}
+	
+	private void showIPs() {
 		List<String> ips = getActiveIPs();
 		System.out.println("The host ip is:");
 		for (String ip: ips) {
@@ -49,5 +81,6 @@ public abstract class LANConnection implements Connection {
 		
 		return result;
 	}
+
 
 }

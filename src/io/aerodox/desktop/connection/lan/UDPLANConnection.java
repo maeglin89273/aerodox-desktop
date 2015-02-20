@@ -1,9 +1,11 @@
 /**
  * 
  */
-package io.aerodox.desktop.connection;
+package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.AerodoxConfig;
+import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.connection.Connection;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.translation.Translator;
 import io.aerodox.desktop.translation.Translator.Type;
@@ -20,7 +22,7 @@ import com.google.gson.JsonParser;
  * @author maeglin89273
  *
  */
-public class UDPLANConnection extends LANConnection {
+public class UDPLANConnection implements Connection {
 	
 	private static final int BUFFER_SIZE = 1 << 8;
 	
@@ -47,7 +49,6 @@ public class UDPLANConnection extends LANConnection {
 	
 	@Override
 	public void start() {
-		this.showIPs();
 		recieveDatagram();
 	}
 

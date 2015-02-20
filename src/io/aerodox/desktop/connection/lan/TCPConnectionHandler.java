@@ -1,8 +1,10 @@
 /**
  * 
  */
-package io.aerodox.desktop.connection;
+package io.aerodox.desktop.connection.lan;
 
+import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.connection.WriterAsyncResponseChannel;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.test.DelayEstimator.Unit;
 import io.aerodox.desktop.translation.Translator;
@@ -49,7 +51,6 @@ public class TCPConnectionHandler implements Runnable {
 				
 				for(this.estimator.start();reader.hasNext();this.estimator.start()) {
 					
-//					System.out.println(obj.toString().getBytes().length);
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), channel);
 					this.estimator.estimate();
 				}

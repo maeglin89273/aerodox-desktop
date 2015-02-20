@@ -1,9 +1,10 @@
 /**
  * 
  */
-package io.aerodox.desktop.connection;
+package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.AerodoxConfig;
+import io.aerodox.desktop.connection.Connection;
 import io.aerodox.desktop.service.PerformingService;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.test.DelayEstimator.Unit;
@@ -24,7 +25,7 @@ import java.util.concurrent.Executors;
  * @author maeglin89273
  *
  */
-public class TCPLANConnection extends LANConnection {
+public class TCPLANConnection implements Connection {
 	
 	private ServerSocket delegate;
 	private ExecutorService executor;
@@ -47,12 +48,10 @@ public class TCPLANConnection extends LANConnection {
 	 */
 	@Override
 	public void start() {
-		showIPs();
-		listenActions();
-		
+		listenRequests();
 	}
 	
-	private void listenActions() {
+	private void listenRequests() {
 		try {
 			for (;!this.delegate.isClosed();) {
 				this.executor.execute(new TCPConnectionHandler(this.delegate.accept()));
@@ -72,8 +71,9 @@ public class TCPLANConnection extends LANConnection {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			PerformingService.getInstance().closeService();
 		}
-		PerformingService.getInstance().closeService();
 	}
 
 }

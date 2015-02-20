@@ -1,7 +1,9 @@
 /**
  * 
  */
-package io.aerodox.desktop.connection;
+package io.aerodox.desktop.connection.lan;
+
+import io.aerodox.desktop.connection.AsyncResponseChannel;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
