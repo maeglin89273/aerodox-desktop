@@ -3,6 +3,7 @@
  */
 package io.aerodox.desktop.translation;
 
+import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.service.Configuration;
@@ -64,7 +65,7 @@ public class ConfigurationTranslator implements ActionTranslator {
 		}
 
 		@Override
-		public Object perform(Performer performer, MotionTools tools, Configuration config) {
+		public JsonResponse perform(Performer performer, MotionTools tools, Configuration config) {
 			for (Pair configPair: this.configPairs) {
 				configPair.configurator.configurate(config, configPair.value);
 			}

@@ -7,7 +7,7 @@ package io.aerodox.desktop.math;
  */
 public class LowPassFilter<T> {
 
-    public static final float ALPHA_DEFAULT = 0.682f;
+    public static final float ALPHA_DEFAULT = 0.687f;
     
     private float alpha;
     private float oneMinusAlpha;

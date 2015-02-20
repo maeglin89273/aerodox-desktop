@@ -4,6 +4,7 @@
 package io.aerodox.desktop.imitation.motiontools;
 
 import io.aerodox.desktop.AerodoxConfig;
+import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.IntXY;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.math.LowPassFilter;
@@ -210,7 +211,7 @@ public class MotionScroller {
 		}
 
 		@Override
-		public Object perform(Performer performer, MotionTools tools, Configuration config) {
+		public JsonResponse perform(Performer performer, MotionTools tools, Configuration config) {
 			performer.mouseWheel(tools.getMotionScroller().rollToScroll(vol));
 			return null;
 		}

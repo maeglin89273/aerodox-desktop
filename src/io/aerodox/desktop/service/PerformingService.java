@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.imitation.motiontools.VirtualPointer;
@@ -44,7 +45,7 @@ public class PerformingService {
 
 			@Override
 			public void run() {
-				Object response = action.perform(performer, tools, config);
+				JsonResponse response = action.perform(performer, tools, config);
 				if (response != null) {
 					channel.respond(response);
 				}

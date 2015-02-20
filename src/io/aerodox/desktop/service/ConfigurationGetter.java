@@ -34,4 +34,8 @@ public class ConfigurationGetter {
 	public double getMoveThreshold() {
 		return this.wrapped.getMoveThresholdSquare();
 	}
+	
+	public String getHostname() {
+		return this.wrapped.getHostname();
+	}
 }

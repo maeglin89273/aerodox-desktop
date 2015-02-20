@@ -25,6 +25,8 @@ public class Configuration {
 	
 	private volatile double[][] pointerOffsetRot;
 	
+	private volatile String hostname = "Aerodox Host";
+	
 	private static final int SENSITIVITY_DEFAULT = 3;
 	private static final int SENSITIVITY_RANGE = 10;
 	
@@ -91,5 +93,9 @@ public class Configuration {
 	
 	public void setPointerInitRotation(double[][] rotMat) {
 		this.pointerOffsetRot = MathUtility.transposeMatrix(rotMat); 
+	}
+
+	public String getHostname() {
+		return this.hostname;
 	}
 }

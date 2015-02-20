@@ -16,7 +16,7 @@ public class FullTranslatorImpl extends Translator {
 	protected void register() {
 		this.addTranslatorMapping("button", MouseButtonTranslator.class);
 		this.addTranslatorMapping("config", ConfigurationTranslator.class);
-		this.addTranslatorMapping("scan", null);
+		this.addTranslatorMapping("scan", ScanTranslator.class);
 		
 		this.addTranslatorMapping("move", MouseMoveTranslator.class);
 		this.addTranslatorMapping("touch", TouchTranslator.class);

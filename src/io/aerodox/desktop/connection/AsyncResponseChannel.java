@@ -24,7 +24,7 @@ public abstract class AsyncResponseChannel implements AutoCloseable {
 		
 	}
 	
-	public void respond(final Object response) {
+	public void respond(final JsonResponse response) {
 		executor.execute(new Runnable() {
 
 			@Override
@@ -32,7 +32,7 @@ public abstract class AsyncResponseChannel implements AutoCloseable {
 				String jsonLiteral = gson.toJson(response);
 				
 				try {
-					write(jsonLiteral);
+					write(jsonLiteral + "\n");
 					
 				} catch (IOException e) {
 					e.printStackTrace();

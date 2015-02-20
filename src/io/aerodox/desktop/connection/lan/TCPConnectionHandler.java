@@ -49,14 +49,14 @@ public class TCPConnectionHandler implements Runnable {
 				AsyncResponseChannel channel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
 				reader.beginArray();
 				
-				for(this.estimator.start();reader.hasNext();this.estimator.start()) {
+				for(this.estimator.start(); !socket.isClosed() && reader.hasNext(); this.estimator.start()) {
 					
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), channel);
 					this.estimator.estimate();
 				}
 				
 				reader.endArray();
-			} catch (IOException e) {
+			} catch (Exception e) {
 //				e.printStackTrace();
 				System.out.println("this connection is lost. we will create a new one");
 			} finally {

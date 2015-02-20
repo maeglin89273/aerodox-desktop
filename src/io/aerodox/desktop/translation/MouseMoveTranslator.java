@@ -3,6 +3,7 @@
  */
 package io.aerodox.desktop.translation;
 
+import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.IntXY;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
@@ -56,7 +57,7 @@ public class MouseMoveTranslator implements ActionTranslator {
 		}
 		
 		@Override
-		public Object perform(Performer performer, MotionTools tools, Configuration config) {
+		public JsonResponse perform(Performer performer, MotionTools tools, Configuration config) {
 			VirtualPointer pointer = tools.getVirtualPointer();
 			pointer.setRotation(rotMat);
 			IntXY pos = pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize());
