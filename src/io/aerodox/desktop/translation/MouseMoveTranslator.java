@@ -21,7 +21,7 @@ import io.aerodox.desktop.test.MotionTracker;
  *
  */
 public class MouseMoveTranslator implements ActionTranslator {
-	private static final double THRESHOLD = MathUtility.EPSILON * 12000;
+	private static final double THRESHOLD = MathUtility.EPSILON * 15000;
 	static MotionTracker tracker = new MotionTracker(6);
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
@@ -30,7 +30,7 @@ public class MouseMoveTranslator implements ActionTranslator {
 		
         double omegaMagnitude = rotVec.getMagnitude();
         if (omegaMagnitude < THRESHOLD) {
-        	rotVec.set(0, 0, 0);
+        	omegaMagnitude = 0;
         } else {
         	rotVec.divided(omegaMagnitude);
         }
