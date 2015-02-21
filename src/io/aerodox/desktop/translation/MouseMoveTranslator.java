@@ -22,13 +22,17 @@ import io.aerodox.desktop.test.MotionTracker;
  *
  */
 public class MouseMoveTranslator implements ActionTranslator {
-	private static final double THRESHOLD = MathUtility.EPSILON * 15000;
-	static MotionTracker tracker = new MotionTracker(6);
+	private static final double BASELINE = 0.0075;
+	private static final float STRETCH_FACTOR = 1.1f;
+	
+	private static final double THRESHOLD = MathUtility.EPSILON * 3000;
+	private static final MotionTracker tracker = new MotionTracker(6);
+	
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
 
 		Vector3D rotVec = args.getAsVector3D("gyro");
-		
+		stretchVector(rotVec);
         double omegaMagnitude = rotVec.getMagnitude();
         if (omegaMagnitude < THRESHOLD) {
         	omegaMagnitude = 0;
@@ -48,6 +52,20 @@ public class MouseMoveTranslator implements ActionTranslator {
 	}
 	
 	
+	private static void stretchVector(Vector3D vec) {
+		vec.set(stretchScalar(vec.getX()), stretchScalar(vec.getY()), stretchScalar(vec.getZ()));
+	}
+	
+	private static double stretchScalar(double scalar) {
+		double sign = Math.signum(scalar);
+		scalar = Math.abs(scalar);
+		scalar = (scalar - BASELINE) * STRETCH_FACTOR + BASELINE;
+		if (scalar < 0) {
+			scalar = 0;
+		}
+		
+		return sign * scalar;
+	}
 	
 	private static class MouseMoveAction implements Action {
 		private double[][] rotMat;

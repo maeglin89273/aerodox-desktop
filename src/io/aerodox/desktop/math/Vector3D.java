@@ -8,7 +8,7 @@ package io.aerodox.desktop.math;
  *
  */
 public class Vector3D {
-	private static double EPSILON = MathUtility.EPSILON * 12000;
+	private static double EPSILON = MathUtility.EPSILON;
 	
 	private double x;
 	private double y;
