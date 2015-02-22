@@ -37,7 +37,7 @@ public class ScanTranslator implements ActionTranslator {
 		private final String host;
 		public ScanResponse(String hostname) {
 			super("scan");
-			host = hostname;
+			this.host = hostname;
 		}
 		
 	}

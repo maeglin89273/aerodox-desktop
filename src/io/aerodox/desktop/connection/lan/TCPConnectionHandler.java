@@ -5,8 +5,6 @@ package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.connection.WriterAsyncResponseChannel;
-import io.aerodox.desktop.test.DelayEstimator;
-import io.aerodox.desktop.test.DelayEstimator.Unit;
 import io.aerodox.desktop.translation.Translator;
 import io.aerodox.desktop.translation.Translator.Type;
 
@@ -16,9 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.SocketException;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
@@ -31,10 +27,10 @@ public class TCPConnectionHandler implements Runnable {
 	private Socket socket;
 	private Translator translator;
 	private JsonParser parser;
-	private DelayEstimator estimator;
+//	private DelayEstimator estimator;
 	public TCPConnectionHandler(Socket socket) {
 		this.socket = socket;
-		this.estimator = new DelayEstimator(100, Unit.MS);	
+//		this.estimator = new DelayEstimator(100, Unit.MS);	
 		
 		this.translator = Translator.newTranslator(Type.COMMAND);
 		this.parser = new JsonParser();
@@ -49,10 +45,10 @@ public class TCPConnectionHandler implements Runnable {
 				AsyncResponseChannel channel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
 				reader.beginArray();
 				
-				for(this.estimator.start(); !socket.isClosed() && reader.hasNext(); this.estimator.start()) {
+				for(; !socket.isClosed() && reader.hasNext();) {
 					
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), channel);
-					this.estimator.estimate();
+					
 				}
 				
 				reader.endArray();

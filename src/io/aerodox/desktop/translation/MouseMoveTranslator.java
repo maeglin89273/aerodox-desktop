@@ -12,8 +12,6 @@ import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Vector3D;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.ConfigurationGetter;
-import io.aerodox.desktop.test.DelayEstimator;
-import io.aerodox.desktop.test.DelayEstimator.Unit;
 import io.aerodox.desktop.test.MotionTracker;
 
 

@@ -6,18 +6,9 @@ package io.aerodox.desktop.connection.lan;
 import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.connection.Connection;
 import io.aerodox.desktop.service.PerformingService;
-import io.aerodox.desktop.test.DelayEstimator;
-import io.aerodox.desktop.test.DelayEstimator.Unit;
 
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
-import java.net.SocketException;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

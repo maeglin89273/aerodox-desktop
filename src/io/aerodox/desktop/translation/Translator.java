@@ -8,11 +8,9 @@ import io.aerodox.desktop.service.PerformingService;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**

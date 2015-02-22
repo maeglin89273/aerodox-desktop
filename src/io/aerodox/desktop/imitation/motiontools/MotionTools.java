@@ -3,8 +3,6 @@
  */
 package io.aerodox.desktop.imitation.motiontools;
 
-import io.aerodox.desktop.test.MotionTracker;
-
 /**
  * @author maeglin89273
  *

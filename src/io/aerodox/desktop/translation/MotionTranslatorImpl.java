@@ -17,7 +17,7 @@ class MotionTranslatorImpl extends Translator {
 	protected void register() {
 		this.addTranslatorMapping("button", MouseButtonTranslator.class);
 		this.addTranslatorMapping("move", MouseMoveTranslator.class);
-//		this.addTranslatorMapping("touch", TouchTranslator.class);
+		this.addTranslatorMapping("touch", TouchTranslator.class);
 		this.addTranslatorMapping("swipe", SwipeTranslator.class);
 	}
 

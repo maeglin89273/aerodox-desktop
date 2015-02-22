@@ -3,9 +3,6 @@
  */
 package io.aerodox.desktop.imitation.motiontools;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-
 import io.aerodox.desktop.imitation.IntXY;
 import io.aerodox.desktop.math.LowPassFilter;
 import io.aerodox.desktop.math.LowPassFilter.ValueIterator;
@@ -13,7 +10,9 @@ import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Plane2D;
 import io.aerodox.desktop.math.Vector2D;
 import io.aerodox.desktop.math.Vector3D;
-import io.aerodox.desktop.test.MotionTracker;
+
+import java.awt.MouseInfo;
+import java.awt.Point;
 
 /**
  * @author maeglin89273

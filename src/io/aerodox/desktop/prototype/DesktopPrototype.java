@@ -61,6 +61,8 @@ public class DesktopPrototype {
 		this.parser = new JsonParser();
 		this.gson = new Gson();
 		
+		
+		
 	}
 	
 	public void start() {
