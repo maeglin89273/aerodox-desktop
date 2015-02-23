@@ -17,7 +17,7 @@ import io.aerodox.desktop.service.ConfigurationGetter;
  *
  */
 public class TouchTranslator implements ActionTranslator {
-	private static final double SCALE = 0.2;
+	private static final double SCALE = 0.7;
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translate(io.aerodox.desktop.translation.Arguments)
 	 */
