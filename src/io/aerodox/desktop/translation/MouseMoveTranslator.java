@@ -20,7 +20,7 @@ import io.aerodox.desktop.test.MotionTracker;
  *
  */
 public class MouseMoveTranslator implements ActionTranslator {
-	private static final double BASELINE = 0.0075;
+	private static final double BASELINE = 0.009;
 	private static final float STRETCH_FACTOR = 1.1f;
 	
 	private static final double THRESHOLD = MathUtility.EPSILON * 3000;

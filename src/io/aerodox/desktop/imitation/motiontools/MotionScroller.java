@@ -173,7 +173,7 @@ public class MotionScroller {
 					return;
 				}
 				
-				PerformingService.getInstance().queueAction(new InertiaAction(nextVol), null);
+				PerformingService.getInstance().queueAction(new InertiaAction(nextVol));
 			}
 			
 			public synchronized void setV0(Vector3D v0) {

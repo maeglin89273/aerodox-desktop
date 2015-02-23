@@ -4,6 +4,7 @@
 package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.connection.Connection;
+import io.aerodox.desktop.service.MonitoringService;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -51,10 +52,14 @@ public class LANConnection implements Connection {
 	
 	private void showIPs() {
 		List<String> ips = getActiveIPs();
-		System.out.println("The host ip is:");
-		for (String ip: ips) {
-			System.out.println(ip);
+		if (ips.isEmpty()) {
+			return;
 		}
+		
+		// should perform active ip test
+		String ip = ips.get(0);
+		MonitoringService.getInstance().update("ip", ip);
+		
 	}
 
 	private List<String> getActiveIPs() {

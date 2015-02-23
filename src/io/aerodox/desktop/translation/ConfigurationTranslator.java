@@ -8,6 +8,7 @@ import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.ConfigurationGetter;
+import io.aerodox.desktop.service.MonitoringService;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,7 +29,9 @@ public class ConfigurationTranslator implements ActionTranslator {
 		CONFIG_MAP.put("sensitivity", new Configurator() {
 			@Override
 			public void configurate(Configuration config, JsonElement value) {
-				config.setSensitivity(value.getAsInt());
+				int level = value.getAsInt();
+				config.setSensitivity(level);
+				MonitoringService.getInstance().update("sensitivity", level);
 			}
 		});
 	}

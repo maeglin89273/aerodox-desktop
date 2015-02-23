@@ -18,13 +18,11 @@ import com.google.gson.JsonObject;
  *
  */
 public abstract class Translator {
-	public enum Type {FULL, MOTION, COMMAND};
-	
-	private Map<String, Class<? extends ActionTranslator>> translatorMap;
+	private Map<String, Class<? extends ActionTranslator>> actionTranslatorMap;
 	private ExecutorService threadPool;
 	
 	public Translator() {
-		this.translatorMap = new HashMap<String, Class<? extends ActionTranslator>>();
+		this.actionTranslatorMap = new HashMap<String, Class<? extends ActionTranslator>>();
 		this.threadPool = Executors.newCachedThreadPool();
 		this.register();
 	}
@@ -33,9 +31,11 @@ public abstract class Translator {
 		
 		String action = chunk.remove("act").getAsString();
 		try {
-			Class<? extends ActionTranslator> translatorClass = translatorMap.get(action);
+			Class<? extends ActionTranslator> translatorClass = actionTranslatorMap.get(action);
 			if (translatorClass != null) {
 				this.asyncDispatch(translatorClass.newInstance(), chunk, channel);
+			} else {
+				System.out.println("no action \"" + action + "\" found");
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
@@ -51,24 +51,10 @@ public abstract class Translator {
 	}
 	
 	protected void addTranslatorMapping(String name, Class<? extends ActionTranslator> translatorClass) {
-		this.translatorMap.put(name, translatorClass);
+		this.actionTranslatorMap.put(name, translatorClass);
 	}
 	
 	protected abstract void register();
-	
-	public static Translator newTranslator(Type type) {
-		switch (type) {
-			case FULL:
-				return new FullTranslatorImpl();
-			case MOTION:
-				return new MotionTranslatorImpl();
-			case COMMAND:
-				return new CommandTranslatorImpl();
-		}
-		
-		return null;
-	}
-	
 	
 	private class TranslationTask implements Runnable {
 

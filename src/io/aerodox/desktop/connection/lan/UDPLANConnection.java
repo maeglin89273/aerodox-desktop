@@ -7,8 +7,10 @@ import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.connection.Connection;
 import io.aerodox.desktop.test.DelayEstimator;
+import io.aerodox.desktop.test.DelayEstimator.Unit;
 import io.aerodox.desktop.translation.Translator;
-import io.aerodox.desktop.translation.Translator.Type;
+import io.aerodox.desktop.translation.TranslatorFactory;
+import io.aerodox.desktop.translation.TranslatorFactory.Type;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -41,9 +43,9 @@ public class UDPLANConnection implements Connection {
 		}
 		
 		this.buffer = new byte[BUFFER_SIZE];
-		this.translator = Translator.newTranslator(Type.MOTION);
+		this.translator = TranslatorFactory.newTranslator(Type.MOTION);
 		this.parser = new JsonParser();
-		this.delay = new DelayEstimator(200, DelayEstimator.Unit.MS);
+		this.delay = new DelayEstimator(200, Unit.MS);
 	}
 	
 	@Override

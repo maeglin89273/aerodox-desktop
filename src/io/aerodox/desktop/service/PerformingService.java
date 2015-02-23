@@ -39,6 +39,10 @@ public class PerformingService {
 		return this.configGetter;
 	}
 	
+	public void queueAction(Action action) {
+		this.queueAction(action, null);
+	}
+	
 	public void queueAction(final Action action, final AsyncResponseChannel channel) {
 		this.executor.execute(new Runnable() {
 

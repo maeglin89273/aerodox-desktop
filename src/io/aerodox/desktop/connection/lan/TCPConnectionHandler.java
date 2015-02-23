@@ -5,8 +5,10 @@ package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.connection.WriterAsyncResponseChannel;
+import io.aerodox.desktop.service.MonitoringService;
 import io.aerodox.desktop.translation.Translator;
-import io.aerodox.desktop.translation.Translator.Type;
+import io.aerodox.desktop.translation.TranslatorFactory;
+import io.aerodox.desktop.translation.TranslatorFactory.Type;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,7 +34,7 @@ public class TCPConnectionHandler implements Runnable {
 		this.socket = socket;
 //		this.estimator = new DelayEstimator(100, Unit.MS);	
 		
-		this.translator = Translator.newTranslator(Type.COMMAND);
+		this.translator = TranslatorFactory.newTranslator(Type.COMMAND);
 		this.parser = new JsonParser();
 		
 	}
@@ -41,14 +43,13 @@ public class TCPConnectionHandler implements Runnable {
 	 */
 	@Override
 	public void run() {
+			MonitoringService.getInstance().update("lan_connection", true);
 			try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 				AsyncResponseChannel channel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
 				reader.beginArray();
 				
 				for(; !socket.isClosed() && reader.hasNext();) {
-					
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), channel);
-					
 				}
 				
 				reader.endArray();
@@ -56,7 +57,8 @@ public class TCPConnectionHandler implements Runnable {
 //				e.printStackTrace();
 				System.out.println("this connection is lost. we will create a new one");
 			} finally {
-				close();
+				this.close();
+				MonitoringService.getInstance().update("lan_connection", false);
 			}
 	}
 	
