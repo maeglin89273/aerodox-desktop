@@ -4,29 +4,49 @@
 package io.aerodox.desktop.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author maeglin89273
  *
  */
 public class MonitoringService {
-	private final List<StatusListener> listenerList;
+	private final Map<String, List<StatusListener>> listenerMap;
 	
 	private MonitoringService() {
-		this.listenerList = new ArrayList<StatusListener>();
+		this.listenerMap = new HashMap<String, List<StatusListener>>();
 	}
 	
 	public static MonitoringService getInstance() {
 		return SinglotenHolder.INSTANCE;
 	}
 	
-	public synchronized void addStatusListener(StatusListener listener) {
-		this.listenerList.add(listener);
+	public synchronized void addStatusListener(StatusListener listener, String... interestedStatuses) {
+		List<StatusListener> listeners;
+		for (String status: interestedStatuses) {
+			listeners = getListenerList(status);
+			listeners.add(listener);
+		}
+		
 	}
 	
+	private List<StatusListener> getListenerList(String status) {
+		List<StatusListener> listeners = this.listenerMap.get(status);
+		if (listeners == null) {
+			listeners = new ArrayList<StatusListener>();
+			this.listenerMap.put(status, listeners);
+		}
+		
+		return listeners;
+	}
+
 	public synchronized void removeStatusListener(StatusListener listener) {
-		this.listenerList.remove(listener);
+		for (Entry<String, List<StatusListener>> pair: this.listenerMap.entrySet()) {
+			pair.getValue().remove(listener);
+		}
 	}
 	
 	public void update(String statusName, Object newValue) {
@@ -34,8 +54,9 @@ public class MonitoringService {
 	}
 	
 	private synchronized void updateStatus(StatusUpdateEvent event) {
-		for (int i = this.listenerList.size(); i >= 0; i--) {
-			this.listenerList.get(i).statusUpdate(event);
+		List<StatusListener> listeners = this.listenerMap.get(event.getStatusName());
+		for (int i = listeners.size(); i >= 0; i--) {
+			listeners.get(i).statusUpdate(event);
 		}
 	}
 	

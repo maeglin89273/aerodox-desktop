@@ -94,7 +94,11 @@ public class Configuration {
 	public void setPointerInitRotation(double[][] rotMat) {
 		this.pointerOffsetRot = MathUtility.transposeMatrix(rotMat); 
 	}
-
+	
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
+	
 	public String getHostname() {
 		return this.hostname;
 	}

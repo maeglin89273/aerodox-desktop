@@ -4,6 +4,7 @@ import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.service.Configuration;
+import io.aerodox.desktop.service.MonitoringService;
 import io.aerodox.desktop.service.PerformingService;
 import io.aerodox.desktop.service.MonitoringService.StatusListener;
 import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
@@ -31,28 +32,29 @@ import javax.swing.event.ChangeListener;
 import javax.swing.SwingConstants;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StatusWindow implements StatusListener {
 
 	private JFrame frame;
-	private JTextField txtAerodoxHost;
+	private JTextField hostText;
 	private JLabel ipValLabel;
 	private JLabel connectionStatusLabel;
 	private JSlider sensitivitySlider;
 	
 	private Map<String , StatusUpdateHandler> handlers;
-	private boolean isConnected;
 	/**
 	 * Create the application.
 	 */
 	public StatusWindow() {
 		initialize();
-		this.isConnected = false;
 		initUpdateHandlers();
-		
+		MonitoringService.getInstance().addStatusListener(this, getInterestedStatus());
 	}
+	
 	
 	/**
 	 * Launch the application.
@@ -98,14 +100,15 @@ public class StatusWindow implements StatusListener {
 		gbc_lblHostname.gridy = 0;
 		rootPanel.add(lblHostname, gbc_lblHostname);
 		
-		txtAerodoxHost = new JTextField();
+		hostText = new JTextField();
+		hostText.addActionListener(new HostChangeListener());
 		GridBagConstraints gbc_txtAerodoxHost = new GridBagConstraints();
 		gbc_txtAerodoxHost.insets = new Insets(0, 0, 5, 0);
 		gbc_txtAerodoxHost.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtAerodoxHost.gridx = 1;
 		gbc_txtAerodoxHost.gridy = 0;
-		rootPanel.add(txtAerodoxHost, gbc_txtAerodoxHost);
-		txtAerodoxHost.setColumns(10);
+		rootPanel.add(hostText, gbc_txtAerodoxHost);
+		hostText.setColumns(10);
 		
 		JLabel lblIpAddress = new JLabel("IP address");
 		lblIpAddress.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -181,12 +184,11 @@ public class StatusWindow implements StatusListener {
 			
 		});
 		
-		handlers.put("lan_connection", new StatusUpdateHandler() {
+		handlers.put("connection", new StatusUpdateHandler() {
 
 			@Override
 			public void handleNewValue(Object value) {
-				boolean isOn = (Boolean)value;
-				
+				connectionStatusLabel.setText(value.toString());
 			}
 			
 		});
@@ -200,6 +202,11 @@ public class StatusWindow implements StatusListener {
 			
 		});
 	}
+	
+	private String[] getInterestedStatus() {
+		return handlers.keySet().toArray(new String[handlers.size()]);
+	}
+
 	
 	@Override
 	public void statusUpdate(StatusUpdateEvent event) {
@@ -228,7 +235,7 @@ public class StatusWindow implements StatusListener {
 		private static class ChangeSensitivityAction implements Action {
 			private final int sensitivity;
 			
-			public ChangeSensitivityAction(int newValue) {
+			ChangeSensitivityAction(int newValue) {
 				this.sensitivity = newValue;
 			}
 
@@ -239,5 +246,27 @@ public class StatusWindow implements StatusListener {
 			}
 			
 		}
+	}
+	
+	private class HostChangeListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			PerformingService.getInstance().queueAction(new ChangeHostAction(hostText.getText()));
+		}
+		
+	}
+	
+	private static class ChangeHostAction implements Action {
+		private final String hostname;
+		ChangeHostAction(String newHostname) {
+			this.hostname = newHostname;
+		}
+		@Override
+		public JsonResponse perform(Performer performer, MotionTools tools, Configuration config) {
+			config.setHostname(this.hostname);
+			return null;
+		}
+		
 	}
 }
