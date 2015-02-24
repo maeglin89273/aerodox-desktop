@@ -62,9 +62,12 @@ public class TCPLANConnection implements Connection {
 			if (this.delegate != null) {
 				this.delegate.close();
 			}
+			
+			this.executor.shutdown();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			
 			PerformingService.getInstance().closeService();
 		}
 	}

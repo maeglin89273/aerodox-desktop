@@ -61,8 +61,7 @@ public class TCPConnectionHandler implements Runnable {
 				System.out.println("this connection is lost. we will create a new one");
 			} finally {
 				this.close();
-				this.info.setConnected(false);
-				MonitoringService.getInstance().update("lan", this.info);
+				
 			}
 	}
 	
@@ -74,5 +73,7 @@ public class TCPConnectionHandler implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.info.setConnected(false);
+		MonitoringService.getInstance().update("lan", this.info);
 	}
 }

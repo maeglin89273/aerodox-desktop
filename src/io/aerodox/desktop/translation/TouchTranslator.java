@@ -17,14 +17,14 @@ import io.aerodox.desktop.service.ConfigurationGetter;
  *
  */
 public class TouchTranslator implements ActionTranslator {
-	private static final double SCALE = 0.7;
+	private static final double SCALE = 0.9;
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translate(io.aerodox.desktop.translation.Arguments)
 	 */
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
 		Vector2D mov = args.getAsVector2D("touchMov");
-		double scale = config.getSensitivity() * SCALE;
+		double scale = (config.getSensitivity() + 1) * SCALE;
 		return new TouchAction(mov.mutiply(scale));
 	}
 	
