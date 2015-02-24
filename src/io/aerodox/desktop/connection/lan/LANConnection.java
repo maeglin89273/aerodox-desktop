@@ -23,6 +23,7 @@ public class LANConnection implements Connection {
 	private Connection tcp;
 	private Connection udp;
 	private Thread subConnectionThread;
+	private String ip;
 	
 	public LANConnection() {
 		this.tcp = new TCPLANConnection();
@@ -39,7 +40,7 @@ public class LANConnection implements Connection {
 
 	@Override
 	public void start() {
-		this.showIPs();
+		this.setupIP();
 		this.subConnectionThread.start();
 		this.tcp.start();
 	}
@@ -50,18 +51,26 @@ public class LANConnection implements Connection {
 		this.tcp.close();
 	}
 	
-	private void showIPs() {
+	private void setupIP() {
 		List<String> ips = getActiveIPs();
 		if (ips.isEmpty()) {
 			return;
 		}
 		
 		// should perform active ip test
-		String ip = ips.get(0);
-		MonitoringService.getInstance().update("ip", ip);
+		this.ip = ips.get(0);
+		
 		
 	}
-
+	
+	public String getIP() {
+		if (this.ip == null) {
+			this.setupIP();
+		}
+		
+		return this.ip;
+	}
+	
 	private List<String> getActiveIPs() {
 		List<String> result = new LinkedList<String>();  
 		try {

@@ -66,8 +66,10 @@ public class UDPLANConnection implements Connection {
 			}
 			
 		} catch (IOException e) {
-			e.printStackTrace();
-			
+//			e.printStackTrace();
+			System.out.println("error occurs, socket may close");
+		} finally {
+			this.close();
 		}
 	}
 	

@@ -48,8 +48,10 @@ public class TCPLANConnection implements Connection {
 				this.executor.execute(new TCPConnectionHandler(this.delegate.accept()));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			System.out.println("connecting error, give it another try");
+		} finally {
+			this.close();
 		}
 	}
 

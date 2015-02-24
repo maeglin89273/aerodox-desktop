@@ -1,5 +1,6 @@
 package io.aerodox.desktop.gui;
 
+import io.aerodox.desktop.connection.ConnectionManager;
 import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
@@ -26,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSlider;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -34,6 +36,9 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +55,14 @@ public class StatusWindow implements StatusListener {
 	 * Create the application.
 	 */
 	public StatusWindow() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		initialize();
 		initUpdateHandlers();
 		MonitoringService.getInstance().addStatusListener(this, getInterestedStatus());
@@ -60,18 +73,8 @@ public class StatusWindow implements StatusListener {
 	 * Launch the application.
 	 */
 	public void start() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		frame.setVisible(true);
 	}
-
 	
 	/**
 	 * Initialize the contents of the frame.
@@ -100,8 +103,8 @@ public class StatusWindow implements StatusListener {
 		gbc_lblHostname.gridy = 0;
 		rootPanel.add(lblHostname, gbc_lblHostname);
 		
-		hostText = new JTextField();
-		hostText.addActionListener(new HostChangeListener());
+		hostText = new JTextField(PerformingService.getInstance().getConfigGetter().getHostname());
+		hostText.addKeyListener(new HostChangeListener());
 		GridBagConstraints gbc_txtAerodoxHost = new GridBagConstraints();
 		gbc_txtAerodoxHost.insets = new Insets(0, 0, 5, 0);
 		gbc_txtAerodoxHost.fill = GridBagConstraints.HORIZONTAL;
@@ -120,7 +123,7 @@ public class StatusWindow implements StatusListener {
 		gbc_lblIpAddress.gridy = 1;
 		rootPanel.add(lblIpAddress, gbc_lblIpAddress);
 		
-		ipValLabel = new JLabel("");
+		ipValLabel = new JLabel(ConnectionManager.getInstance().getIP());
 		GridBagConstraints gbc_lblIpvalue = new GridBagConstraints();
 		gbc_lblIpvalue.anchor = GridBagConstraints.WEST;
 		gbc_lblIpvalue.insets = new Insets(0, 0, 5, 0);
@@ -138,7 +141,7 @@ public class StatusWindow implements StatusListener {
 		gbc_lblStatus.gridy = 2;
 		rootPanel.add(lblStatus, gbc_lblStatus);
 		
-		connectionStatusLabel = new JLabel("no connection");
+		connectionStatusLabel = new JLabel("Disconnected");
 		GridBagConstraints gbc_lblNoConnection = new GridBagConstraints();
 		gbc_lblNoConnection.anchor = GridBagConstraints.WEST;
 		gbc_lblNoConnection.insets = new Insets(0, 0, 5, 0);
@@ -171,6 +174,7 @@ public class StatusWindow implements StatusListener {
 		rootPanel.add(sensitivitySlider, gbc_slider);
 		
 		frame.getContentPane().add(rootPanel);
+		frame.pack();
 	}
 	
 	private void initUpdateHandlers() {
@@ -210,7 +214,7 @@ public class StatusWindow implements StatusListener {
 	
 	@Override
 	public void statusUpdate(StatusUpdateEvent event) {
-		
+		this.handlers.get(event.getStatusName()).handleNewValue(event.getNewValue());
 	}
 	
 	private interface StatusUpdateHandler {
@@ -248,13 +252,11 @@ public class StatusWindow implements StatusListener {
 		}
 	}
 	
-	private class HostChangeListener implements ActionListener {
-
+	private class HostChangeListener extends KeyAdapter {
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void keyReleased(KeyEvent e) {
 			PerformingService.getInstance().queueAction(new ChangeHostAction(hostText.getText()));
 		}
-		
 	}
 	
 	private static class ChangeHostAction implements Action {

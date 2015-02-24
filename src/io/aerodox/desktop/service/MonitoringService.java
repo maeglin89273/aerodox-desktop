@@ -21,7 +21,7 @@ public class MonitoringService {
 	}
 	
 	public static MonitoringService getInstance() {
-		return SinglotenHolder.INSTANCE;
+		return SingletonHolder.INSTANCE;
 	}
 	
 	public synchronized void addStatusListener(StatusListener listener, String... interestedStatuses) {
@@ -55,12 +55,12 @@ public class MonitoringService {
 	
 	private synchronized void updateStatus(StatusUpdateEvent event) {
 		List<StatusListener> listeners = this.listenerMap.get(event.getStatusName());
-		for (int i = listeners.size(); i >= 0; i--) {
+		for (int i = listeners.size() - 1; i >= 0; i--) {
 			listeners.get(i).statusUpdate(event);
 		}
 	}
 	
-	private static class SinglotenHolder {
+	private static class SingletonHolder {
 		private static final MonitoringService INSTANCE = new MonitoringService();
 	}
 	

@@ -4,6 +4,7 @@
 package io.aerodox.desktop;
 
 import io.aerodox.desktop.connection.lan.LANConnection;
+import io.aerodox.desktop.gui.StatusWindow;
 
 /**
  * @author maeglin89273
@@ -12,7 +13,7 @@ import io.aerodox.desktop.connection.lan.LANConnection;
 public class DesktopLunacher {
 	
 	public static void main(String[] args) {
-		new LANConnection().start();
+		new StatusWindow().start();
 		
 	}
 	

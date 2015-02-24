@@ -32,7 +32,7 @@ public class PerformingService {
 	}
 	
 	public static PerformingService getInstance() {
-		return SinglotenHolder.INSTANCE;
+		return SingletonHolder.INSTANCE;
 	}
 	
 	public ConfigurationGetter getConfigGetter() {
@@ -61,7 +61,7 @@ public class PerformingService {
 		this.executor.shutdownNow();
 	}
 	
-	private static class SinglotenHolder {
+	private static class SingletonHolder {
 		private static final PerformingService INSTANCE = new PerformingService();
 	}
 }
