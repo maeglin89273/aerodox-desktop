@@ -4,6 +4,7 @@
 package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.AerodoxConfig;
+import io.aerodox.desktop.connection.BasicConnection;
 import io.aerodox.desktop.connection.Connection;
 import io.aerodox.desktop.service.PerformingService;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.Executors;
  * @author maeglin89273
  *
  */
-public class TCPLANConnection implements Connection {
+public class TCPLANConnection extends BasicConnection {
 	
 	private ServerSocket delegate;
 	private ExecutorService executor;
@@ -32,17 +33,9 @@ public class TCPLANConnection implements Connection {
 			close();
 		}
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see io.aerodox.desktop.connection.Connection#start()
-	 */
+
 	@Override
-	public void start() {
-		listenRequests();
-	}
-	
-	private void listenRequests() {
+	protected void startRecieve() {
 		try {
 			for (;!this.delegate.isClosed();) {
 				this.executor.execute(new TCPConnectionHandler(this.delegate.accept()));
@@ -54,8 +47,7 @@ public class TCPLANConnection implements Connection {
 			this.close();
 		}
 	}
-
-
+	
 	@Override
 	public void close() {
 		try {
@@ -71,5 +63,6 @@ public class TCPLANConnection implements Connection {
 			PerformingService.getInstance().closeService();
 		}
 	}
+
 
 }

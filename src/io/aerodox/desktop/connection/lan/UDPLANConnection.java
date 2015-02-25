@@ -5,6 +5,7 @@ package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.connection.BasicConnection;
 import io.aerodox.desktop.connection.Connection;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.test.DelayEstimator.Unit;
@@ -23,7 +24,7 @@ import com.google.gson.JsonParser;
  * @author maeglin89273
  *
  */
-public class UDPLANConnection implements Connection {
+public class UDPLANConnection extends BasicConnection {
 	
 	private static final int BUFFER_SIZE = 1 << 8;
 	
@@ -33,7 +34,6 @@ public class UDPLANConnection implements Connection {
 	private JsonParser parser;
 	
 	private DelayEstimator delay;
-	
 	
 	public UDPLANConnection() {
 		try {
@@ -46,14 +46,11 @@ public class UDPLANConnection implements Connection {
 		this.translator = TranslatorFactory.newTranslator(Type.MOTION);
 		this.parser = new JsonParser();
 		this.delay = new DelayEstimator(200, Unit.MS);
-	}
-	
-	@Override
-	public void start() {
-		recieveDatagram();
+		
 	}
 
-	private void recieveDatagram() {
+	@Override
+	protected void startRecieve() {
 		DatagramPacket actionPacket;
 		try (AsyncResponseChannel channel = new DatagramAsyncResponseChannel(this.delegate)) {
 			for (;!delegate.isClosed();) {

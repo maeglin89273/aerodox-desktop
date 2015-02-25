@@ -8,6 +8,7 @@ package io.aerodox.desktop.connection;
  *
  */
 public interface Connection {
+	
 	public abstract void start();
 	public abstract void close();
 }

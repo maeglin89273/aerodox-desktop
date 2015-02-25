@@ -17,7 +17,6 @@ import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
  */
 public class ConnectionManager implements StatusListener {
 	private LANConnection lan;
-	private Thread lanThread;
 	
 	private Set<ConnectionInfo> activeInfos;
 	private ConnectionManager() {
@@ -33,26 +32,15 @@ public class ConnectionManager implements StatusListener {
 
 	private void setupLANConnection() {
 		this.lan = new LANConnection();
-		this.lanThread = new Thread() {
-			@Override
-			public void run() {
-				lan.start();
-			}
-		};
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
 				lan.close();
-				try {
-					lanThread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 			}
 		});
 		
-		this.lanThread.start();
+		this.lan.start();
 	}
 	
 	private void setupBluetoothConnection() {

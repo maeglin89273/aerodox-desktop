@@ -22,26 +22,17 @@ public class LANConnection implements Connection {
 	
 	private Connection tcp;
 	private Connection udp;
-	private Thread subConnectionThread;
 	private String ip;
 	
 	public LANConnection() {
 		this.tcp = new TCPLANConnection();
 		this.udp = new UDPLANConnection();
-		this.subConnectionThread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				udp.start();
-			}
-			
-		});
 	}
 
 	@Override
 	public void start() {
 		this.setupIP();
-		this.subConnectionThread.start();
+		this.udp.start();
 		this.tcp.start();
 	}
 
