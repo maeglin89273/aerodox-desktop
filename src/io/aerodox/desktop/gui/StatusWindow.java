@@ -1,12 +1,13 @@
 package io.aerodox.desktop.gui;
 
-import io.aerodox.desktop.connection.ConnectionManager;
 import io.aerodox.desktop.connection.JsonResponse;
 import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.service.Configuration;
+import io.aerodox.desktop.service.ConnectionService;
 import io.aerodox.desktop.service.MonitoringService;
 import io.aerodox.desktop.service.PerformingService;
+import io.aerodox.desktop.service.ServiceManager;
 import io.aerodox.desktop.service.MonitoringService.StatusListener;
 import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
 import io.aerodox.desktop.translation.Action;
@@ -65,7 +66,7 @@ public class StatusWindow implements StatusListener {
 		
 		initialize();
 		initUpdateHandlers();
-		MonitoringService.getInstance().addStatusListener(this, getInterestedStatus());
+		ServiceManager.monitoring().addStatusListener(this, getInterestedStatus());
 	}
 	
 	
@@ -103,7 +104,7 @@ public class StatusWindow implements StatusListener {
 		gbc_lblHostname.gridy = 0;
 		rootPanel.add(lblHostname, gbc_lblHostname);
 		
-		hostText = new JTextField(PerformingService.getInstance().getConfigGetter().getHostname());
+		hostText = new JTextField(ServiceManager.performing().getConfigGetter().getHostname());
 		hostText.addKeyListener(new HostChangeListener());
 		GridBagConstraints gbc_txtAerodoxHost = new GridBagConstraints();
 		gbc_txtAerodoxHost.insets = new Insets(0, 0, 5, 0);
@@ -123,7 +124,7 @@ public class StatusWindow implements StatusListener {
 		gbc_lblIpAddress.gridy = 1;
 		rootPanel.add(lblIpAddress, gbc_lblIpAddress);
 		
-		ipValLabel = new JLabel(ConnectionManager.getInstance().getIP());
+		ipValLabel = new JLabel(ServiceManager.connection().getIP());
 		GridBagConstraints gbc_lblIpvalue = new GridBagConstraints();
 		gbc_lblIpvalue.anchor = GridBagConstraints.WEST;
 		gbc_lblIpvalue.insets = new Insets(0, 0, 5, 0);
@@ -228,25 +229,27 @@ public class StatusWindow implements StatusListener {
 			
 			JSlider source = (JSlider)e.getSource();
 	        if (!source.getValueIsAdjusting()) {
-	        	int oldValue = PerformingService.getInstance().getConfigGetter().getSensitivity();
+	        	int oldValue = ServiceManager.performing().getConfigGetter().getSensitivity();
 	            int newValue = source.getValue();
 	            if (newValue != oldValue) {
-	            	PerformingService.getInstance().queueAction(new ChangeSensitivityAction(newValue));
+	            	ServiceManager.performing().queueAction(new ChangeSensitivityAction(newValue),
+	            												ServiceManager.connection().getActiveResponseChannel());
 	            }
 	        }   
 		}
 		
-		private static class ChangeSensitivityAction implements Action {
+		private static class ChangeSensitivityAction extends JsonResponse implements Action {
 			private final int sensitivity;
 			
 			ChangeSensitivityAction(int newValue) {
+				super("config");
 				this.sensitivity = newValue;
 			}
 
 			@Override
 			public JsonResponse perform(Performer performer, MotionTools tools, Configuration config) {
 				config.setSensitivity(sensitivity);
-				return null;
+				return this;
 			}
 			
 		}
@@ -255,7 +258,7 @@ public class StatusWindow implements StatusListener {
 	private class HostChangeListener extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
-			PerformingService.getInstance().queueAction(new ChangeHostAction(hostText.getText()));
+			ServiceManager.performing().queueAction(new ChangeHostAction(hostText.getText()));
 		}
 	}
 	

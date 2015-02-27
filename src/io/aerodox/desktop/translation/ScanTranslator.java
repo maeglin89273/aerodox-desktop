@@ -20,7 +20,6 @@ public class ScanTranslator implements ActionTranslator {
 	 */
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
-		
 		return new ScanAction();
 	}
 	

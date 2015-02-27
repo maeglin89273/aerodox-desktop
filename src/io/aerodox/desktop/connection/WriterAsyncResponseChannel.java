@@ -22,6 +22,7 @@ public class WriterAsyncResponseChannel extends AsyncResponseChannel {
 	 */
 	@Override
 	protected void write(String jsonLiteral) throws IOException {
+		
 		writer.write(jsonLiteral);
 		writer.flush();
 	}

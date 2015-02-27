@@ -13,6 +13,7 @@ import io.aerodox.desktop.math.MathUtility;
 import io.aerodox.desktop.math.Vector3D;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.PerformingService;
+import io.aerodox.desktop.service.ServiceManager;
 import io.aerodox.desktop.translation.Action;
 
 import java.util.Timer;
@@ -25,7 +26,7 @@ import java.util.TimerTask;
 public class MotionScroller {
 	private static final float RADIUS = 8f;
 	private static final float DIAMETER = 2 * RADIUS;
-	private static final float RELEASE_ANGULAR_VOL = 0.0585f;
+	private static final float RELEASE_ANGULAR_VOL = 0.0577f;
 	private static final float RELEASE_ANGULAR_VOL_SQUARE = RELEASE_ANGULAR_VOL * RELEASE_ANGULAR_VOL;
 	
 	private final IntXY noVol = new IntXY(); 
@@ -173,7 +174,7 @@ public class MotionScroller {
 					return;
 				}
 				
-				PerformingService.getInstance().queueAction(new InertiaAction(nextVol));
+				ServiceManager.performing().queueAction(new InertiaAction(nextVol));
 			}
 			
 			public synchronized void setV0(Vector3D v0) {

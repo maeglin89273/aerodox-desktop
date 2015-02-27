@@ -3,7 +3,8 @@
  */
 package io.aerodox.desktop.connection.lan;
 
-import io.aerodox.desktop.connection.Connection;
+import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.connection.ServerConnection;
 import io.aerodox.desktop.service.MonitoringService;
 
 import java.net.Inet4Address;
@@ -18,10 +19,10 @@ import java.util.List;
  * @author maeglin89273
  *
  */
-public class LANConnection implements Connection {
+public class LANConnection implements ServerConnection {
 	
-	private Connection tcp;
-	private Connection udp;
+	private ServerConnection tcp;
+	private ServerConnection udp;
 	private String ip;
 	
 	public LANConnection() {
@@ -36,6 +37,11 @@ public class LANConnection implements Connection {
 		this.tcp.start();
 	}
 
+	@Override
+	public AsyncResponseChannel getResponseChannel() {
+		return tcp.getResponseChannel();
+	}
+	
 	@Override
 	public void close() {
 		this.udp.close();
@@ -86,6 +92,7 @@ public class LANConnection implements Connection {
 		
 		return result;
 	}
+
 
 
 }

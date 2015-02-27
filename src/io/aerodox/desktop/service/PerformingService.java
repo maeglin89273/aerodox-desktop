@@ -16,23 +16,19 @@ import java.util.concurrent.Executors;
  * @author maeglin89273
  *
  */
-public class PerformingService {
+public class PerformingService implements Service {
 	private Configuration config;
 	private ConfigurationGetter configGetter;
 	private Performer performer;
 	private MotionTools tools;
 	private ExecutorService executor;
 	
-	private PerformingService() {
+	PerformingService() {
 		this.config = new Configuration();
 		this.configGetter = new ConfigurationGetter(this.config);
 		this.performer = new Performer();
 		this.tools = new MotionTools();
 		this.executor = Executors.newSingleThreadExecutor();
-	}
-	
-	public static PerformingService getInstance() {
-		return SingletonHolder.INSTANCE;
 	}
 	
 	public ConfigurationGetter getConfigGetter() {
@@ -49,7 +45,7 @@ public class PerformingService {
 			@Override
 			public void run() {
 				JsonResponse response = action.perform(performer, tools, config);
-				if (response != null) {
+				if (response != null && channel != null) {
 					channel.respond(response);
 				}
 			}
@@ -57,11 +53,8 @@ public class PerformingService {
 		});
 	}
 	
+	@Override
 	public void closeService() {
 		this.executor.shutdownNow();
-	}
-	
-	private static class SingletonHolder {
-		private static final PerformingService INSTANCE = new PerformingService();
 	}
 }

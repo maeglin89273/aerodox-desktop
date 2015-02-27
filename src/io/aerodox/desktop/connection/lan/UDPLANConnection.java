@@ -6,7 +6,7 @@ package io.aerodox.desktop.connection.lan;
 import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.connection.BasicConnection;
-import io.aerodox.desktop.connection.Connection;
+import io.aerodox.desktop.connection.ServerConnection;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.test.DelayEstimator.Unit;
 import io.aerodox.desktop.translation.Translator;
@@ -32,7 +32,7 @@ public class UDPLANConnection extends BasicConnection {
 	private byte[] buffer;
 	private Translator translator;
 	private JsonParser parser;
-	
+	private AsyncResponseChannel rspChannel;
 	private DelayEstimator delay;
 	
 	public UDPLANConnection() {
@@ -52,13 +52,14 @@ public class UDPLANConnection extends BasicConnection {
 	@Override
 	protected void startRecieve() {
 		DatagramPacket actionPacket;
-		try (AsyncResponseChannel channel = new DatagramAsyncResponseChannel(this.delegate)) {
+		try (AsyncResponseChannel rspChannel = new DatagramAsyncResponseChannel(this.delegate)) {
+			this.rspChannel = rspChannel;
 			for (;!delegate.isClosed();) {
 //				delay.start();
 				actionPacket = new DatagramPacket(this.buffer, this.buffer.length);
 				delegate.receive(actionPacket);
 //				delay.estimate();
-				handlePacket(actionPacket, channel);
+				handlePacket(actionPacket, rspChannel);
 				
 			}
 			
@@ -73,12 +74,19 @@ public class UDPLANConnection extends BasicConnection {
 	private void handlePacket(DatagramPacket packet, AsyncResponseChannel channel) {
 		String jsonLiteral = new String(packet.getData(), 0, packet.getLength());
 		translator.asyncTranslate(this.parser.parse(jsonLiteral).getAsJsonObject(), channel);
-		
+	}
+	
+	@Override
+	public AsyncResponseChannel getResponseChannel() {
+		return this.rspChannel;
 	}
 	
 	@Override
 	public void close() {
+		this.translator.stopTranslation();
+		this.rspChannel = null;
 		this.delegate.close();
 	}
-
+	
+	
 }

@@ -1,13 +1,14 @@
 /**
  * 
  */
-package io.aerodox.desktop.connection;
+package io.aerodox.desktop.service;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import io.aerodox.desktop.connection.AsyncResponseChannel;
+import io.aerodox.desktop.connection.ConnectionInfo;
 import io.aerodox.desktop.connection.lan.LANConnection;
-import io.aerodox.desktop.service.MonitoringService;
 import io.aerodox.desktop.service.MonitoringService.StatusListener;
 import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
 
@@ -15,36 +16,32 @@ import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
  * @author maeglin89273
  *
  */
-public class ConnectionManager implements StatusListener {
+public class ConnectionService implements StatusListener, Service {
 	private LANConnection lan;
 	
 	private Set<ConnectionInfo> activeInfos;
-	private ConnectionManager() {
+	private AsyncResponseChannel rspChannel;
+	
+	ConnectionService() {
 		setupLANConnection();
 		setupBluetoothConnection();
 		this.activeInfos = new HashSet<ConnectionInfo>();
-		MonitoringService.getInstance().addStatusListener(this, "lan", "bluetooth");
-	}
-	
-	public static ConnectionManager getInstance() {
-		return SingletonHolder.INSTANCE;
+		ServiceManager.monitoring().addStatusListener(this, "lan", "bluetooth");
 	}
 
 	private void setupLANConnection() {
 		this.lan = new LANConnection();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				lan.close();
-			}
-		});
 		
 		this.lan.start();
 	}
 	
 	private void setupBluetoothConnection() {
 		
+	}
+	
+	@Override
+	public void closeService() {
+		this.lan.close();
 	}
 	
 	public String getIP() {
@@ -54,8 +51,9 @@ public class ConnectionManager implements StatusListener {
 	public boolean isConnected() {
 		return !this.activeInfos.isEmpty();
 	}
-	private static class SingletonHolder {
-		private static final ConnectionManager INSTANCE = new ConnectionManager();
+	
+	public AsyncResponseChannel getActiveResponseChannel() {
+		return this.rspChannel;
 	}
 
 	@Override
@@ -66,18 +64,28 @@ public class ConnectionManager implements StatusListener {
 		} else {
 			this.activeInfos.add(info);
 		}
-		notifyInfoUpdate();
+		updateConncetionStatus();
 	}
-
-	private void notifyInfoUpdate() {
-		String connectionStatus = this.isConnected()? randomChooseActiveInfo().toString(): "Disconnected";
-		MonitoringService.getInstance().update("connection", connectionStatus);
+	
+	private void updateConncetionStatus() {
+		String connectionStatus;
+		if (this.isConnected()) {
+			ConnectionInfo info = randomChooseActiveInfo();
+			this.rspChannel = info.getSource().getResponseChannel();
+			connectionStatus = info.toString();
+		} else {
+			this.rspChannel = null;
+			connectionStatus = "Disconnected";
+		}
+		 
+		ServiceManager.monitoring().update("connection", connectionStatus);
 	}
 	
 	private ConnectionInfo randomChooseActiveInfo() {
 		for (ConnectionInfo info: this.activeInfos) {
 			return info;
 		}
+	
 		return null;
 	}
 }

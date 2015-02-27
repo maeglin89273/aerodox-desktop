@@ -5,6 +5,7 @@ package io.aerodox.desktop.translation;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.service.PerformingService;
+import io.aerodox.desktop.service.ServiceManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,6 @@ public abstract class Translator {
 	}
 	
 	public void asyncTranslate(JsonObject chunk, AsyncResponseChannel channel) {
-		
 		String action = chunk.remove("act").getAsString();
 		try {
 			Class<? extends ActionTranslator> translatorClass = actionTranslatorMap.get(action);
@@ -71,7 +71,7 @@ public abstract class Translator {
 			
 			@Override
 			public void run() {
-				PerformingService service = PerformingService.getInstance();
+				PerformingService service = ServiceManager.performing();
 				Action action = translator.translate(new Arguments(args), service.getConfigGetter());
 				if (action != null) {
 					service.queueAction(action, channel);

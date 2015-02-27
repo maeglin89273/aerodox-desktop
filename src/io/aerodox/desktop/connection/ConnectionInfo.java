@@ -10,10 +10,12 @@ package io.aerodox.desktop.connection;
 public class ConnectionInfo {
 	public enum ConnectionType {LAN, BLUETOOTH};
 	private boolean connected;
+	private final ServerConnection soruce;
 	private final ConnectionType type;
 	private final String deviceAddress;
 	
-	public ConnectionInfo(boolean connected, ConnectionType type, String deviceAddress) {
+	public ConnectionInfo(ServerConnection source, boolean connected, ConnectionType type, String deviceAddress) {
+		soruce = source;
 		this.setConnected(connected);
 		this.type = type;
 		this.deviceAddress = deviceAddress;
@@ -56,6 +58,10 @@ public class ConnectionInfo {
 		strBuilder.append(this.getDeviceAddress());
 		strBuilder.append(")");
 		return strBuilder.toString();
+	}
+
+	public ServerConnection getSource() {
+		return soruce;
 	}
 	
 }

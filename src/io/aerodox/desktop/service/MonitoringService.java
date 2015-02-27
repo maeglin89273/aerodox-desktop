@@ -13,15 +13,11 @@ import java.util.Map.Entry;
  * @author maeglin89273
  *
  */
-public class MonitoringService {
+public class MonitoringService implements Service {
 	private final Map<String, List<StatusListener>> listenerMap;
 	
-	private MonitoringService() {
+	MonitoringService() {
 		this.listenerMap = new HashMap<String, List<StatusListener>>();
-	}
-	
-	public static MonitoringService getInstance() {
-		return SingletonHolder.INSTANCE;
 	}
 	
 	public synchronized void addStatusListener(StatusListener listener, String... interestedStatuses) {
@@ -60,10 +56,6 @@ public class MonitoringService {
 		}
 	}
 	
-	private static class SingletonHolder {
-		private static final MonitoringService INSTANCE = new MonitoringService();
-	}
-	
 	public interface StatusListener {
 		public abstract void statusUpdate(StatusUpdateEvent event);
 	}
@@ -84,5 +76,10 @@ public class MonitoringService {
 		public Object getNewValue() {
 			return this.newValue;
 		}
+	}
+
+	@Override
+	public void closeService() {
+		this.listenerMap.clear();
 	}
 }

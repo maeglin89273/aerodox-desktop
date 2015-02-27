@@ -7,7 +7,7 @@ package io.aerodox.desktop.connection;
  * @author maeglin89273
  *
  */
-public abstract class BasicConnection implements Connection {
+public abstract class BasicConnection implements ServerConnection {
 	private Thread reciever;
 	
 	protected BasicConnection() {
