@@ -15,13 +15,15 @@ import io.aerodox.desktop.service.ConfigurationGetter;
  *
  */
 public class SwipeTranslator implements ActionTranslator {
-
+	private static final float BASE_SCALAR = 0.7f;
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translateToAction(io.aerodox.desktop.translation.SubTranslator.Arguments)
 	 */
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
-		return new SwipeAction(args.getAsVector3D("gyro"));
+		Vector3D gyro = args.getAsVector3D("gyro");
+		gyro.mutiply(config.getSensitivity() * 0.1 + BASE_SCALAR);
+		return new SwipeAction(gyro);
 	}
 	
 	private static class SwipeAction implements Action {
