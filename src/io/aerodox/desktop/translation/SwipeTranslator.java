@@ -15,7 +15,7 @@ import io.aerodox.desktop.service.ConfigurationGetter;
  *
  */
 public class SwipeTranslator implements ActionTranslator {
-	private static final float BASE_SCALAR = 0.7f;
+	private static final float BASE_SCALAR = 0.6f;
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.translation.SubTranslator#translateToAction(io.aerodox.desktop.translation.SubTranslator.Arguments)
 	 */

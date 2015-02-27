@@ -29,7 +29,7 @@ public class MotionScroller {
 	private static final float RELEASE_ANGULAR_VOL = 0.057f;
 	private static final float RELEASE_ANGULAR_VOL_SQUARE = RELEASE_ANGULAR_VOL * RELEASE_ANGULAR_VOL;
 	
-	private final IntXY noVol = new IntXY(); 
+	private final IntXY NO_VOL = new IntXY(); 
 	private final LowPassFilter<double[]> filter;
 	
 	private final InertiaProducer inertiaProducer;
@@ -51,6 +51,7 @@ public class MotionScroller {
 	public void stopInertiaScroll() {
 		if (this.inertiaProducer.isRunning()) {
 			this.inertiaProducer.stop();
+			filter.reset();
 		}
 		
 	}
@@ -59,13 +60,12 @@ public class MotionScroller {
 
 		if (this.inertiaProducer.isRunning()) {
 			this.inertiaProducer.tryAccelerateV0(angularVol);
-			return this.noVol;
+			return this.NO_VOL;
 		}
 		
 		IntXY scrollVol = this.rollToScroll(angularVol);
 		
 		if (angularVol.getSquare() > RELEASE_ANGULAR_VOL_SQUARE) {
-			//schedule a new inertia buffer routine
 			this.inertiaProducer.start(angularVol);
 		}
 
