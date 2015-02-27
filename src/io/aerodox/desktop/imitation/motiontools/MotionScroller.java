@@ -26,7 +26,7 @@ import java.util.TimerTask;
 public class MotionScroller {
 	private static final float RADIUS = 8f;
 	private static final float DIAMETER = 2 * RADIUS;
-	private static final float RELEASE_ANGULAR_VOL = 0.0577f;
+	private static final float RELEASE_ANGULAR_VOL = 0.057f;
 	private static final float RELEASE_ANGULAR_VOL_SQUARE = RELEASE_ANGULAR_VOL * RELEASE_ANGULAR_VOL;
 	
 	private final IntXY noVol = new IntXY(); 
@@ -47,6 +47,12 @@ public class MotionScroller {
 		 this.distance = new Vector3D();
 		 this.ix = this.iy = this.iz = 0;
 		 
+	}
+	public void stopInertiaScroll() {
+		if (this.inertiaProducer.isRunning()) {
+			this.inertiaProducer.stop();
+		}
+		
 	}
 	
 	public IntXY swipe(Vector3D angularVol) {

@@ -194,6 +194,7 @@ public class StatusWindow implements StatusListener {
 			@Override
 			public void handleNewValue(Object value) {
 				connectionStatusLabel.setText(value.toString());
+				frame.pack();
 			}
 			
 		});

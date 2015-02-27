@@ -74,6 +74,7 @@ public class MouseMoveTranslator implements ActionTranslator {
 		
 		@Override
 		public JsonResponse perform(Performer performer, MotionTools tools, Configuration config) {
+			tools.getMotionScroller().stopInertiaScroll();
 			VirtualPointer pointer = tools.getVirtualPointer();
 			pointer.setRotation(rotMat);
 			IntXY pos = pointer.beamToScreen(config.getScreenPlane(), Configuration.getScreenSize());
