@@ -27,7 +27,7 @@ public class ConnectionService implements MessageListener, Service {
 	
 	ConnectionService() {
 		setupLANConnection();
-		setupBluetoothConnection();
+//		setupBluetoothConnection();
 		this.activeInfos = new HashSet<ConnectionInfo>();
 		ServiceManager.message().addMessageListener(this, "lan", "bluetooth");
 	}
