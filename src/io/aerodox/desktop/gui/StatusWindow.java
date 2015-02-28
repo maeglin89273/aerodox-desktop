@@ -5,11 +5,11 @@ import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.ConnectionService;
-import io.aerodox.desktop.service.MonitoringService;
+import io.aerodox.desktop.service.MessagingService;
 import io.aerodox.desktop.service.PerformingService;
 import io.aerodox.desktop.service.ServiceManager;
-import io.aerodox.desktop.service.MonitoringService.StatusListener;
-import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
+import io.aerodox.desktop.service.MessagingService.MessageListener;
+import io.aerodox.desktop.service.MessagingService.Message;
 import io.aerodox.desktop.translation.Action;
 
 import java.awt.EventQueue;
@@ -43,7 +43,7 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StatusWindow implements StatusListener {
+public class StatusWindow implements MessageListener {
 
 	private JFrame frame;
 	private JTextField hostText;
@@ -66,7 +66,7 @@ public class StatusWindow implements StatusListener {
 		
 		initialize();
 		initUpdateHandlers();
-		ServiceManager.monitoring().addStatusListener(this, getInterestedStatus());
+		ServiceManager.message().addMessageListener(this, getInterestedStatus());
 	}
 	
 	
@@ -215,8 +215,8 @@ public class StatusWindow implements StatusListener {
 
 	
 	@Override
-	public void statusUpdate(StatusUpdateEvent event) {
-		this.handlers.get(event.getStatusName()).handleNewValue(event.getNewValue());
+	public void handleMessage(Message message) {
+		this.handlers.get(message.getWhat()).handleNewValue(message.getValue());
 	}
 	
 	private interface StatusUpdateHandler {

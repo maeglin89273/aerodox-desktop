@@ -16,7 +16,7 @@ public abstract class ServiceManager {
 		return SingletonHolder.CONNECTION_INST;
 	}
 	
-	public static MonitoringService monitoring() {
+	public static MessagingService message() {
 		return SingletonHolder.MONITOR_INST;
 		
 	}
@@ -27,7 +27,7 @@ public abstract class ServiceManager {
 	
 	private static class SingletonHolder {
 		private static final PerformingService PERFORM_INST = new PerformingService();
-		private static final MonitoringService MONITOR_INST = new MonitoringService();
+		private static final MessagingService MONITOR_INST = new MessagingService();
 		private static final ConnectionService CONNECTION_INST = new ConnectionService();
 		
 		static {

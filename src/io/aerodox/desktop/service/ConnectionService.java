@@ -9,14 +9,14 @@ import java.util.Set;
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.connection.ConnectionInfo;
 import io.aerodox.desktop.connection.lan.LANConnection;
-import io.aerodox.desktop.service.MonitoringService.StatusListener;
-import io.aerodox.desktop.service.MonitoringService.StatusUpdateEvent;
+import io.aerodox.desktop.service.MessagingService.MessageListener;
+import io.aerodox.desktop.service.MessagingService.Message;
 
 /**
  * @author maeglin89273
  *
  */
-public class ConnectionService implements StatusListener, Service {
+public class ConnectionService implements MessageListener, Service {
 	private LANConnection lan;
 	
 	private Set<ConnectionInfo> activeInfos;
@@ -26,7 +26,7 @@ public class ConnectionService implements StatusListener, Service {
 		setupLANConnection();
 		setupBluetoothConnection();
 		this.activeInfos = new HashSet<ConnectionInfo>();
-		ServiceManager.monitoring().addStatusListener(this, "lan", "bluetooth");
+		ServiceManager.message().addMessageListener(this, "lan", "bluetooth");
 	}
 
 	private void setupLANConnection() {
@@ -45,7 +45,7 @@ public class ConnectionService implements StatusListener, Service {
 	}
 	
 	public String getIP() {
-		return lan.getIP();
+		return lan.getAddress();
 	}
 	
 	public boolean isConnected() {
@@ -57,8 +57,8 @@ public class ConnectionService implements StatusListener, Service {
 	}
 
 	@Override
-	public void statusUpdate(StatusUpdateEvent event) {
-		ConnectionInfo info = (ConnectionInfo) event.getNewValue();
+	public void handleMessage(Message message) {
+		ConnectionInfo info = (ConnectionInfo) message.getValue();
 		if (!info.isConnected()) {
 			this.activeInfos.remove(info);
 		} else {
@@ -78,7 +78,7 @@ public class ConnectionService implements StatusListener, Service {
 			connectionStatus = "Disconnected";
 		}
 		 
-		ServiceManager.monitoring().update("connection", connectionStatus);
+		ServiceManager.message().send("connection", connectionStatus);
 	}
 	
 	private ConnectionInfo randomChooseActiveInfo() {

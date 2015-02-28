@@ -8,7 +8,7 @@ import io.aerodox.desktop.imitation.Performer;
 import io.aerodox.desktop.imitation.motiontools.MotionTools;
 import io.aerodox.desktop.service.Configuration;
 import io.aerodox.desktop.service.ConfigurationGetter;
-import io.aerodox.desktop.service.MonitoringService;
+import io.aerodox.desktop.service.MessagingService;
 import io.aerodox.desktop.service.ServiceManager;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ConfigurationTranslator implements ActionTranslator {
 			public void configurate(Configuration config, JsonElement value) {
 				int level = value.getAsInt();
 				config.setSensitivity(level);
-				ServiceManager.monitoring().update("sensitivity", level);
+				ServiceManager.message().send("sensitivity", level);
 			}
 		});
 	}

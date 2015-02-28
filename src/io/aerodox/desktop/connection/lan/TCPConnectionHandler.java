@@ -8,7 +8,7 @@ import io.aerodox.desktop.connection.ServerConnection;
 import io.aerodox.desktop.connection.ConnectionInfo;
 import io.aerodox.desktop.connection.ConnectionInfo.ConnectionType;
 import io.aerodox.desktop.connection.WriterAsyncResponseChannel;
-import io.aerodox.desktop.service.MonitoringService;
+import io.aerodox.desktop.service.MessagingService;
 import io.aerodox.desktop.service.ServiceManager;
 import io.aerodox.desktop.translation.Translator;
 import io.aerodox.desktop.translation.TranslatorFactory;
@@ -54,7 +54,7 @@ public class TCPConnectionHandler implements Runnable, ServerConnection {
 				AsyncResponseChannel rspChannel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
 				this.rspChannel = rspChannel;
 				
-				ServiceManager.monitoring().update("lan", this.info);
+				ServiceManager.message().send("lan", this.info);
 				reader.beginArray();
 				for(; !socket.isClosed() && reader.hasNext();) {
 					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), rspChannel);
@@ -82,11 +82,12 @@ public class TCPConnectionHandler implements Runnable, ServerConnection {
 		this.rspChannel = null;
 		try {
 			this.socket.close();
+			this.socket = null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.info.setConnected(false);
-		ServiceManager.monitoring().update("lan", this.info);
+		ServiceManager.message().send("lan", this.info);
 	}
 	@Override
 	public AsyncResponseChannel getResponseChannel() {

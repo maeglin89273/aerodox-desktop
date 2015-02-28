@@ -5,7 +5,7 @@ package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.connection.AsyncResponseChannel;
 import io.aerodox.desktop.connection.ServerConnection;
-import io.aerodox.desktop.service.MonitoringService;
+import io.aerodox.desktop.service.MessagingService;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -19,7 +19,7 @@ import java.util.List;
  * @author maeglin89273
  *
  */
-public class LANConnection implements ServerConnection {
+public class LANConnection implements HasAddressConnection {
 	
 	private ServerConnection tcp;
 	private ServerConnection udp;
@@ -60,7 +60,8 @@ public class LANConnection implements ServerConnection {
 		
 	}
 	
-	public String getIP() {
+	@Override
+	public String getAddress() {
 		if (this.ip == null) {
 			this.setupIP();
 		}
