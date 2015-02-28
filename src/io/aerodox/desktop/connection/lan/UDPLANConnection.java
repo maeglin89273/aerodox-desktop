@@ -33,7 +33,6 @@ public class UDPLANConnection extends BasicConnection {
 	private Translator translator;
 	private JsonParser parser;
 	private AsyncResponseChannel rspChannel;
-	private DelayEstimator delay;
 	
 	public UDPLANConnection() {
 		try {
@@ -45,7 +44,6 @@ public class UDPLANConnection extends BasicConnection {
 		this.buffer = new byte[BUFFER_SIZE];
 		this.translator = TranslatorFactory.newTranslator(Type.MOTION);
 		this.parser = new JsonParser();
-		this.delay = new DelayEstimator(200, Unit.MS);
 		
 	}
 
@@ -55,10 +53,8 @@ public class UDPLANConnection extends BasicConnection {
 		try (AsyncResponseChannel rspChannel = new DatagramAsyncResponseChannel(this.delegate)) {
 			this.rspChannel = rspChannel;
 			for (;!delegate.isClosed();) {
-//				delay.start();
 				actionPacket = new DatagramPacket(this.buffer, this.buffer.length);
 				delegate.receive(actionPacket);
-//				delay.estimate();
 				handlePacket(actionPacket, rspChannel);
 				
 			}
@@ -86,6 +82,7 @@ public class UDPLANConnection extends BasicConnection {
 		this.translator.stopTranslation();
 		this.rspChannel = null;
 		this.delegate.close();
+		this.delegate = null;
 	}
 	
 	

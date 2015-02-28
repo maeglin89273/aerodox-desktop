@@ -3,11 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="gson-2.3.1.jar"/>
-	<classpathentry kind="lib" path="/home/maeglin89273/Eclipse Workspace/AerodoxDesktop/bluecove-gpl-2.1.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/home/maeglin89273/Eclipse Workspace/AerodoxDesktop/bluecove-2.1.1-SNAPSHOT.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://www.bluecove.org/bluecove/apidocs/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="bluecove-2.1.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="bluecove-gpl-2.1.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

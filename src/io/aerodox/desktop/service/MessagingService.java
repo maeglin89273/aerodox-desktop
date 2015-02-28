@@ -51,8 +51,10 @@ public class MessagingService implements Service {
 	
 	private synchronized void sendToListeners(Message event) {
 		List<MessageListener> listeners = this.listenerMap.get(event.getWhat());
-		for (int i = listeners.size() - 1; i >= 0; i--) {
-			listeners.get(i).handleMessage(event);
+		if (listeners != null) {
+			for (int i = listeners.size() - 1; i >= 0; i--) {
+				listeners.get(i).handleMessage(event);
+			}
 		}
 	}
 	
