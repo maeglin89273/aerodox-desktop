@@ -7,10 +7,12 @@ package io.aerodox.desktop.connection;
  * @author maeglin89273
  *
  */
-public abstract class BasicConnection implements ServerConnection {
+public abstract class NonBlockingConnection implements ServerConnection {
 	private Thread reciever;
+	private volatile boolean closed;
 	
-	protected BasicConnection() {
+	protected NonBlockingConnection() {
+		this.closed = false;
 		this.reciever = new Thread() {
 			@Override
 			public void run() {
@@ -26,5 +28,19 @@ public abstract class BasicConnection implements ServerConnection {
 		reciever.start();
 	}
 	
+	@Override 
+	public void close() {
+		if (this.isClosed()) {
+			return;
+		}
+		this.closeImpl();
+		this.closed = true;
+	}
+	
+	@Override
+	public boolean isClosed() {
+		return this.closed;
+	}
 	protected abstract void startRecieve();
+	protected abstract void closeImpl(); 
 }

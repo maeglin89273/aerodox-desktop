@@ -20,6 +20,7 @@ public class DesktopLunacher {
 	
 	public static void main(String[] args) {
 		new StatusWindow().start();
+
 	}
 	
 }

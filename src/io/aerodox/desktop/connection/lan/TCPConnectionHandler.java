@@ -49,36 +49,35 @@ public class TCPConnectionHandler implements Runnable, ServerConnection {
 	 */
 	@Override
 	public void run() {
-			
-			try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-				AsyncResponseChannel rspChannel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
-				this.rspChannel = rspChannel;
-				
-				ServiceManager.message().send("lan", this.info);
-				reader.beginArray();
-				for(; !socket.isClosed() && reader.hasNext();) {
-					translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), rspChannel);
-				}
-				
-				reader.endArray();
-			} catch (Exception e) {
-//				e.printStackTrace();
-				System.out.println("this connection is lost. we will create a new one");
-			} finally {
-				this.close();
-				
-			}
+		this.start();
 	}
 	
 	@Override
 	public void start() {
-		// Always started
+		try (JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+			AsyncResponseChannel rspChannel = new WriterAsyncResponseChannel(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())))) {
+			this.rspChannel = rspChannel;
+			
+			ServiceManager.message().send("lan", this.info);
+			reader.beginArray();
+			for(; !socket.isClosed() && reader.hasNext();) {
+				translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), rspChannel);
+			}
+			
+			reader.endArray();
+		} catch (Exception e) {
+//				e.printStackTrace();
+			System.out.println("this connection is lost. we will create a new one");
+		} finally {
+			this.close();
+			
+		}
 	}
 	
 	@Override
 	public void close() {
-		
 		this.translator.stopTranslation();
+		this.translator = null;
 		this.rspChannel = null;
 		try {
 			this.socket.close();
@@ -92,6 +91,13 @@ public class TCPConnectionHandler implements Runnable, ServerConnection {
 	@Override
 	public AsyncResponseChannel getResponseChannel() {
 		return this.rspChannel;
+	}
+	@Override
+	public boolean isClosed() {
+		if (this.socket == null) {
+			return true;
+		}
+		return this.socket.isClosed();
 	}
 	
 }

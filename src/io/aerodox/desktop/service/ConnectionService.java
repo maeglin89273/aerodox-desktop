@@ -27,7 +27,7 @@ public class ConnectionService implements MessageListener, Service {
 	
 	ConnectionService() {
 		setupLANConnection();
-//		setupBluetoothConnection();
+		setupBluetoothConnection();
 		this.activeInfos = new HashSet<ConnectionInfo>();
 		ServiceManager.message().addMessageListener(this, "lan", "bluetooth");
 	}
@@ -49,7 +49,11 @@ public class ConnectionService implements MessageListener, Service {
 	}
 	
 	public String getIP() {
-		return lan.getAddress();
+		return this.lan.getAddress();
+	}
+	
+	public String getBlutoothMAC() {
+		return this.bluetooth.getAddress();
 	}
 	
 	public boolean isConnected() {

@@ -12,4 +12,5 @@ public interface ServerConnection {
 	public abstract void start();
 	public abstract AsyncResponseChannel getResponseChannel();
 	public abstract void close();
+	public abstract boolean isClosed();
 }

@@ -5,7 +5,7 @@ package io.aerodox.desktop.connection.lan;
 
 import io.aerodox.desktop.AerodoxConfig;
 import io.aerodox.desktop.connection.AsyncResponseChannel;
-import io.aerodox.desktop.connection.BasicConnection;
+import io.aerodox.desktop.connection.NonBlockingConnection;
 import io.aerodox.desktop.connection.ServerConnection;
 import io.aerodox.desktop.test.DelayEstimator;
 import io.aerodox.desktop.test.DelayEstimator.Unit;
@@ -24,7 +24,7 @@ import com.google.gson.JsonParser;
  * @author maeglin89273
  *
  */
-public class UDPLANConnection extends BasicConnection {
+public class UDPLANConnection extends NonBlockingConnection {
 	
 	private static final int BUFFER_SIZE = 1 << 8;
 	
@@ -63,6 +63,7 @@ public class UDPLANConnection extends BasicConnection {
 //			e.printStackTrace();
 			System.out.println("error occurs, socket may close");
 		} finally {
+			
 			this.close();
 		}
 	}
@@ -78,7 +79,7 @@ public class UDPLANConnection extends BasicConnection {
 	}
 	
 	@Override
-	public void close() {
+	protected void closeImpl() {
 		this.translator.stopTranslation();
 		this.rspChannel = null;
 		this.delegate.close();

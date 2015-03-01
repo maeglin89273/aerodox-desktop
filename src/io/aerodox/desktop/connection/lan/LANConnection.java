@@ -94,6 +94,11 @@ public class LANConnection implements HasAddressConnection {
 		return result;
 	}
 
+	@Override
+	public boolean isClosed() {
+		return this.tcp.isClosed();
+	}
+
 
 
 }

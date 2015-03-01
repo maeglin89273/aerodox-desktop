@@ -47,7 +47,6 @@ public class StatusWindow implements MessageListener {
 
 	private JFrame frame;
 	private JTextField hostText;
-	private JLabel ipValLabel;
 	private JLabel connectionStatusLabel;
 	private JSlider sensitivitySlider;
 	
@@ -94,7 +93,7 @@ public class StatusWindow implements MessageListener {
 		rootPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		rootPanel.setLayout(gridBagLayout);
 		
-		JLabel lblHostname = new JLabel("Hostname");
+		JLabel lblHostname = new JLabel("LAN Hostname");
 		lblHostname.setFont(new Font("Dialog", Font.BOLD, 12));
 		lblHostname.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblHostname = new GridBagConstraints();
@@ -114,23 +113,34 @@ public class StatusWindow implements MessageListener {
 		rootPanel.add(hostText, gbc_txtAerodoxHost);
 		hostText.setColumns(10);
 		
-		JLabel lblIpAddress = new JLabel("IP address");
-		lblIpAddress.setFont(new Font("Dialog", Font.BOLD, 12));
-		lblIpAddress.setHorizontalAlignment(SwingConstants.LEFT);
+		JLabel lblAddress = new JLabel("Address");
+		lblAddress.setFont(new Font("Dialog", Font.BOLD, 12));
+		lblAddress.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblIpAddress = new GridBagConstraints();
 		gbc_lblIpAddress.anchor = GridBagConstraints.WEST;
 		gbc_lblIpAddress.insets = new Insets(0, 0, 5, 5);
 		gbc_lblIpAddress.gridx = 0;
 		gbc_lblIpAddress.gridy = 1;
-		rootPanel.add(lblIpAddress, gbc_lblIpAddress);
+		gbc_lblIpAddress.gridheight = 2;
+		rootPanel.add(lblAddress, gbc_lblIpAddress);
 		
-		ipValLabel = new JLabel(ServiceManager.connection().getIP());
+		
+		JLabel ipValLabel = new JLabel("LAN: " + ServiceManager.connection().getIP());
 		GridBagConstraints gbc_lblIpvalue = new GridBagConstraints();
 		gbc_lblIpvalue.anchor = GridBagConstraints.WEST;
 		gbc_lblIpvalue.insets = new Insets(0, 0, 5, 0);
 		gbc_lblIpvalue.gridx = 1;
 		gbc_lblIpvalue.gridy = 1;
 		rootPanel.add(ipValLabel, gbc_lblIpvalue);
+		
+		
+		JLabel btValLabel = new JLabel("Bluetooth: " + ServiceManager.connection().getBlutoothMAC());
+		GridBagConstraints gbc_lblBtvalue = new GridBagConstraints();
+		gbc_lblBtvalue.anchor = GridBagConstraints.WEST;
+		gbc_lblBtvalue.insets = new Insets(0, 0, 5, 0);
+		gbc_lblBtvalue.gridx = 1;
+		gbc_lblBtvalue.gridy = 2;
+		rootPanel.add(btValLabel, gbc_lblBtvalue);
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -139,7 +149,7 @@ public class StatusWindow implements MessageListener {
 		gbc_lblStatus.anchor = GridBagConstraints.WEST;
 		gbc_lblStatus.insets = new Insets(0, 0, 5, 5);
 		gbc_lblStatus.gridx = 0;
-		gbc_lblStatus.gridy = 2;
+		gbc_lblStatus.gridy = 3;
 		rootPanel.add(lblStatus, gbc_lblStatus);
 		
 		connectionStatusLabel = new JLabel("Disconnected");
@@ -147,7 +157,7 @@ public class StatusWindow implements MessageListener {
 		gbc_lblNoConnection.anchor = GridBagConstraints.WEST;
 		gbc_lblNoConnection.insets = new Insets(0, 0, 5, 0);
 		gbc_lblNoConnection.gridx = 1;
-		gbc_lblNoConnection.gridy = 2;
+		gbc_lblNoConnection.gridy = 3;
 		rootPanel.add(connectionStatusLabel, gbc_lblNoConnection);
 		
 		JLabel lblSensitivity = new JLabel("Sensitivity");
@@ -157,7 +167,7 @@ public class StatusWindow implements MessageListener {
 		gbc_lblSensitivity.anchor = GridBagConstraints.WEST;
 		gbc_lblSensitivity.insets = new Insets(0, 0, 5, 5);
 		gbc_lblSensitivity.gridx = 0;
-		gbc_lblSensitivity.gridy = 3;
+		gbc_lblSensitivity.gridy = 4;
 		rootPanel.add(lblSensitivity, gbc_lblSensitivity);
 		
 		sensitivitySlider = new JSlider();
@@ -171,7 +181,7 @@ public class StatusWindow implements MessageListener {
 		gbc_slider.fill = GridBagConstraints.HORIZONTAL;
 		gbc_slider.insets = new Insets(0, 0, 5, 0);
 		gbc_slider.gridx = 1;
-		gbc_slider.gridy = 3;
+		gbc_slider.gridy = 4;
 		rootPanel.add(sensitivitySlider, gbc_slider);
 		
 		frame.getContentPane().add(rootPanel);
@@ -180,14 +190,6 @@ public class StatusWindow implements MessageListener {
 	
 	private void initUpdateHandlers() {
 		handlers = new HashMap<String, StatusUpdateHandler>();
-		handlers.put("ip", new StatusUpdateHandler() {
-
-			@Override
-			public void handleNewValue(Object value) {
-				ipValLabel.setText(value.toString());
-			}
-			
-		});
 		
 		handlers.put("connection", new StatusUpdateHandler() {
 
