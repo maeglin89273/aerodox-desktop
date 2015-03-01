@@ -33,7 +33,7 @@ public class MouseMoveTranslator implements ActionTranslator {
 		stretchVector(rotVec);
         double omegaMagnitude = rotVec.getMagnitude();
         if (omegaMagnitude < THRESHOLD) {
-        	omegaMagnitude = 0;
+        	return null;
         } else {
         	rotVec.divided(omegaMagnitude);
         }
@@ -65,11 +65,15 @@ public class MouseMoveTranslator implements ActionTranslator {
 		return sign * scalar;
 	}
 	
-	private static class MouseMoveAction implements Action {
+	static class MouseMoveAction implements Action {
 		private double[][] rotMat;
 		
-		private MouseMoveAction(double[][] rotMat) {
+		MouseMoveAction(double[][] rotMat) {
 			this.rotMat = rotMat;
+		}
+		
+		double[][] getRotMat() {
+			return this.rotMat;
 		}
 		
 		@Override

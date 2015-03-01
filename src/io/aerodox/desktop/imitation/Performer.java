@@ -60,7 +60,7 @@ public class Performer {
 	public synchronized void mouseWheel(IntXY delta) {
 
 		if (delta.getX() != 0) {
-			this.handleMouseWheelHorizontal(delta.getX());
+//			this.handleMouseWheelHorizontal(delta.getX());
 		}
 		
 		if (delta.getY() != 0) {

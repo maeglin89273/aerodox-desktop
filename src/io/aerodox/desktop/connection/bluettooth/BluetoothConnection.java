@@ -38,8 +38,9 @@ public class BluetoothConnection extends NonBlockingConnection implements HasAdd
 			
 			notifier = openNewServerSocket();
 		} catch (IOException e) {
-			e.printStackTrace();
-			ServiceManager.message().send("info", "The bluetooth is not available. Please turn on your bluetooth and set it to visible");
+//			e.printStackTrace();
+			ServiceManager.message().send("info", "The bluetooth is not available.\n"
+					+ "If you want to connection via bluetooth, please turn on your bluetooth and restart Aerodox");
 			this.close();
 		}
 		return notifier;
@@ -49,7 +50,7 @@ public class BluetoothConnection extends NonBlockingConnection implements HasAdd
 		return (StreamConnectionNotifier) Connector.open(BluetoothConfig.URL);
 	}
 	
-	private static String formatAddress(String btAddress) {
+	static String formatAddress(String btAddress) {
 		StringBuilder sb = new StringBuilder(btAddress.length() + (btAddress.length() / 2));
 		for (int i = 0; i < btAddress.length(); i += 2) {
 			sb.append(btAddress.substring(i, i + 2));
@@ -61,7 +62,7 @@ public class BluetoothConnection extends NonBlockingConnection implements HasAdd
 
 	@Override
 	public String getAddress() {
-		return this.address;
+		return this.address == null? "OFF": this.address;
 	}
 	/* (non-Javadoc)
 	 * @see io.aerodox.desktop.connection.ServerConnection#getResponseChannel()

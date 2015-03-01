@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import javax.bluetooth.RemoteDevice;
 import javax.microedition.io.StreamConnection;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
@@ -47,7 +49,7 @@ public class BluetoothConnectionHandler implements ServerConnection {
 		this.estimator = new DelayEstimator(10, Unit.MS);
 		try {
 			RemoteDevice mobile = RemoteDevice.getRemoteDevice(socket);
-			this.info = new ConnectionInfo(this, true, ConnectionType.BLUETOOTH, mobile.getBluetoothAddress());
+			this.info = new ConnectionInfo(this, true, ConnectionType.BLUETOOTH, mobile.getFriendlyName(true));
 			ServiceManager.message().send("bluetooth", this.info);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -67,6 +69,7 @@ public class BluetoothConnectionHandler implements ServerConnection {
 			reader.beginArray();
 			for(; reader.hasNext();) {
 				translator.asyncTranslate(this.parser.parse(reader).getAsJsonObject(), rspChannel);
+//				estimator.estimate();
 			}
 			
 			reader.endArray();

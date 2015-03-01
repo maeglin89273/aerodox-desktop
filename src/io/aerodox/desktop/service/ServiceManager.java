@@ -9,40 +9,42 @@ package io.aerodox.desktop.service;
  */
 public abstract class ServiceManager {
 	public static PerformingService performing() {
-		return SingletonHolder.PERFORM_INST;
+		return PfmSingleton.INSTANCE;
 	}
 	
 	public static ConnectionService connection() {
-		return SingletonHolder.CONNECTION_INST;
+		return ConSingleton.INSTANCE;
 	}
 	
 	public static MessagingService message() {
-		return SingletonHolder.MONITOR_INST;
+		return MsgSingleton.INSTANCE;
 		
 	}
 	
 	public static void closeAllService() {
-		SingletonHolder.closeAllService();
+		MsgSingleton.INSTANCE.closeService();
+		PfmSingleton.INSTANCE.closeService();
+		ConSingleton.INSTANCE.closeService();
 	}
 	
-	private static class SingletonHolder {
-		private static final PerformingService PERFORM_INST = new PerformingService();
-		private static final MessagingService MONITOR_INST = new MessagingService();
-		private static final ConnectionService CONNECTION_INST = new ConnectionService();
-		
-		static {
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				@Override
-				public void run() {
-					closeAllService();
-				}
-			});
-		}
-		
-		private static void closeAllService() {
-			CONNECTION_INST.closeService();
-			PERFORM_INST.closeService();
-			MONITOR_INST.closeService();
-		}
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				closeAllService();
+			}
+		});
 	}
+	
+	private static class MsgSingleton {
+		private static final MessagingService INSTANCE = new MessagingService();
+	}
+	private static class PfmSingleton {
+		private static final PerformingService INSTANCE = new PerformingService();
+	}
+	private static class ConSingleton {
+		private static final ConnectionService INSTANCE = new ConnectionService();
+	}
+		
+	
 }

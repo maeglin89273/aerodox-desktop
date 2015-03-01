@@ -12,13 +12,13 @@ public class ConnectionInfo {
 	private boolean connected;
 	private final ServerConnection soruce;
 	private final ConnectionType type;
-	private final String deviceAddress;
+	private final String deviceName;
 	
-	public ConnectionInfo(ServerConnection source, boolean connected, ConnectionType type, String deviceAddress) {
+	public ConnectionInfo(ServerConnection source, boolean connected, ConnectionType type, String deviceName) {
 		soruce = source;
 		this.setConnected(connected);
 		this.type = type;
-		this.deviceAddress = deviceAddress;
+		this.deviceName = deviceName;
 	}
 	
 	public boolean isConnected() {
@@ -33,8 +33,8 @@ public class ConnectionInfo {
 		return type;
 	}
 	
-	public String getDeviceAddress() {
-		return deviceAddress;
+	public String getDeviceName() {
+		return deviceName;
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class ConnectionInfo {
 			ConnectionInfo connection = (ConnectionInfo)o;
 			return this.isConnected() == connection.isConnected() &&
 				   this.getType() == connection.getType() &&
-				   this.getDeviceAddress().equals(connection.getDeviceAddress());
+				   this.getDeviceName().equals(connection.getDeviceName());
 		}
 		
 		return false;
@@ -55,7 +55,7 @@ public class ConnectionInfo {
 		strBuilder.append(" (");
 		strBuilder.append(this.getType().name().toLowerCase());
 		strBuilder.append(" from ");
-		strBuilder.append(this.getDeviceAddress());
+		strBuilder.append(this.getDeviceName());
 		strBuilder.append(")");
 		return strBuilder.toString();
 	}

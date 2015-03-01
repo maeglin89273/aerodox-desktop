@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -63,9 +64,10 @@ public class StatusWindow implements MessageListener {
 			e.printStackTrace();
 		}
 		
-		initialize();
 		initUpdateHandlers();
 		ServiceManager.message().addMessageListener(this, getInterestedStatus());
+		initializeUI();
+		
 	}
 	
 	
@@ -79,7 +81,7 @@ public class StatusWindow implements MessageListener {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initializeUI() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 180);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -209,6 +211,17 @@ public class StatusWindow implements MessageListener {
 			}
 			
 		});
+		
+		handlers.put("info", new StatusUpdateHandler() {
+
+			@Override
+			public void handleNewValue(Object value) {
+				
+				JOptionPane.showMessageDialog(frame, value.toString(), "Warning", JOptionPane.WARNING_MESSAGE);
+			}
+			
+		});
+		
 	}
 	
 	private String[] getInterestedStatus() {

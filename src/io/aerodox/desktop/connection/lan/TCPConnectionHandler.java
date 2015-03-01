@@ -42,7 +42,7 @@ public class TCPConnectionHandler implements Runnable, ServerConnection {
 		
 		this.translator = TranslatorFactory.newTranslator(Type.COMMAND);
 		this.parser = new JsonParser();
-		this.info = new ConnectionInfo(this, true, ConnectionType.LAN, socket.getInetAddress().getHostAddress());
+		this.info = new ConnectionInfo(this, true, ConnectionType.LAN, socket.getInetAddress().getHostName());
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
@@ -67,7 +67,7 @@ public class TCPConnectionHandler implements Runnable, ServerConnection {
 			reader.endArray();
 		} catch (Exception e) {
 //				e.printStackTrace();
-			System.out.println("this connection is lost. we will create a new one");
+			System.out.println("lan stream is closed");
 		} finally {
 			this.close();
 			
