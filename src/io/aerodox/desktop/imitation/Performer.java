@@ -31,6 +31,11 @@ public class Performer {
 		}
 	}
 	
+	public synchronized void keyTyped(int keycode) {
+		this.delegate.keyPress(keycode);
+		this.delegate.keyRelease(keycode);
+	}
+	
 	public synchronized void mouseButton(MouseButtonState state) {
 		if (state.isPress()) {
 			this.delegate.mousePress(state.getMask());
@@ -79,3 +84,4 @@ public class Performer {
 	}
 	
 }
+

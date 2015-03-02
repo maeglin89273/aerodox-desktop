@@ -14,6 +14,7 @@ class CommandTranslatorImpl extends Translator {
 	 */
 	@Override
 	protected void register() {
+		this.addTranslatorMapping("arrow", ArrowTranslator.class);
 		this.addTranslatorMapping("button", MouseButtonTranslator.class);
 		this.addTranslatorMapping("config", ConfigurationTranslator.class);
 		this.addTranslatorMapping("scan", ScanTranslator.class);
