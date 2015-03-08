@@ -28,7 +28,10 @@ public class MouseMoveTranslator implements ActionTranslator {
 	
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
-
+		if (config.getSensitivity() == 0) {
+			return null;
+		}
+		
 		Vector3D rotVec = args.getAsVector3D("gyro");
 		stretchVector(rotVec);
         double omegaMagnitude = rotVec.getMagnitude();

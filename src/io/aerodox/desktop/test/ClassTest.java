@@ -33,27 +33,8 @@ public class ClassTest {
 	 */
 	public static void main(String[] args) throws IOException {
 		
+		testCompress();
 		
-		final Timer timer = new Timer();
-		
-		
-		TimerTask task = new TimerTask() {
-			private int count = 3;
-			@Override
-			public void run() {
-				long cur = System.currentTimeMillis();
-				long le = this.scheduledExecutionTime();
-				System.out.println("diff: " + (cur - le)  + ", now: " + cur + ", le: " + le);
-				
-				count--;
-				if (count < 0) {
-					this.cancel();
-				}
-			}
-			
-		};
-		
-		timer.scheduleAtFixedRate(task, 500, 500);
 		
 //		System.out.println(new Vector3D(1, 0, 0).crossProduct(new Vector3D(0, 0, -1)));
 //		testCompress();
@@ -61,12 +42,23 @@ public class ClassTest {
 	}
 	
 	private static void testCompress() {
-		String json = "{\"rot\":{\"z\":0.8715385794639587,\"y\":0.05660635977983475,\"x\":-0.011508936993777752},\"action\":\"move\"}";
+		String json = "{\"action\":\"move\",\"rot\":{\"z\":0.8715385794639587,\"y\":0.05660635977983475,\"x\":-0.011508936993777752}}";
+		System.out.println(json);
 		System.out.println(json.length());
-//		byte[] buffer = new byte[100];
-//		byte[] data = json.getBytes();
-//		int size = compress(data, buffer);
-//		System.out.println(data.length + " " + size);
+		compressVector(new double[]{0.8715385794639587, 0.05660635977983475, -0.011508936993777752});
+		System.out.println("{\"action\":\"move\",\"rot\":[\"56su1\",\"c4rz\",\"-2gsx\"]}".length());
+	}
+	
+	private static final double EXPO = 10000000.0;
+	
+	public static String[] compressVector(double[] values) {
+		String[] vector = new String[values.length];
+		for (int i = 0; i < vector.length; i++) {
+			vector[i] = Long.toString((long)(values[i] * EXPO), 36);
+			System.out.println(vector[i]);
+		}
+		
+		return vector;
 	}
 	
 	private static int compress(byte[] data, byte[] buffer) {

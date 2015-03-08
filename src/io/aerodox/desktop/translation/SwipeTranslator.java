@@ -22,6 +22,10 @@ public class SwipeTranslator implements ActionTranslator {
 	 */
 	@Override
 	public Action translate(Arguments args, ConfigurationGetter config) {
+		if (config.getSensitivity() == 0) {
+			return null;
+		}
+		
 		Vector3D gyro = args.getAsVector3D("gyro");
 		gyro.mutiply(config.getSensitivity() * STEP + BASE_SCALAR);
 		return new SwipeAction(gyro);

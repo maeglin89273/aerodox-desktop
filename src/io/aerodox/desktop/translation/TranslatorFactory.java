@@ -11,13 +11,12 @@ import java.util.Map;
  *
  */
 public class TranslatorFactory {
-	public enum Type {FULL, FULL_FOR_SLOW, MOTION, COMMAND}
+	public enum Type {FULL, MOTION, COMMAND}
 
 	private static final Map<Type, Class<? extends Translator>> TRANSLATOR_IMPL_CLASSES;
 
 	static {
 		TRANSLATOR_IMPL_CLASSES = new HashMap<TranslatorFactory.Type, Class<? extends Translator>>();
-		TRANSLATOR_IMPL_CLASSES.put(TranslatorFactory.Type.FULL_FOR_SLOW, FullSlowTranslatorImpl.class);
 		TRANSLATOR_IMPL_CLASSES.put(TranslatorFactory.Type.FULL, FullTranslatorImpl.class);
 		TRANSLATOR_IMPL_CLASSES.put(TranslatorFactory.Type.MOTION, MotionTranslatorImpl.class);
 		TRANSLATOR_IMPL_CLASSES.put(TranslatorFactory.Type.COMMAND, CommandTranslatorImpl.class);
